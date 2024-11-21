@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role',[0,1,2])->default(0);// 0 for student , 1 for admin , and 2 for teacher
+            $table->enum('role', [0, 1, 2])->default(0); // 0 for student, 1 for admin, and 2 for teacher
             $table->string('status')->nullable();
             $table->string('verification_code')->nullable();
             $table->timestamp('verification_expires_at')->nullable();

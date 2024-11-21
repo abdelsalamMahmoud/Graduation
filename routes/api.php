@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\V1\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,3 +31,7 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
+Route::get('/users', [StudentController::class, 'index']);
+Route::get('user/{id}', [StudentController::class, 'show']);
+Route::post('create_user', [StudentController::class, 'store']);
+Route::post('update/{id}', [StudentController::class, 'update']);

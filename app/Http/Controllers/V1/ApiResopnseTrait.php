@@ -8,10 +8,11 @@ trait ApiResopnseTrait
 
         $array=[
             'data'=>$data,
-            'massage'=> $message,
+            'message'=> $message,
             'status'=> $status,
         ];
-        return response($array);
+        return response()->json($array);
+
     }
 
 }
