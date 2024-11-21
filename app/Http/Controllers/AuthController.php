@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -15,9 +16,11 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'register','verify']]);
     }
 
-    public function login(Request $request) {
+
+    public function login(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required|string|min:6',
         ]);
 
@@ -36,6 +39,8 @@ class AuthController extends Controller
             auth()->logout();
             return response()->json(['error' => 'User not verified. Please verify email.'], 403);
         }
+
+        $token = auth('api')->login($user);
 
         return $this->createNewToken($token);
     }
@@ -120,12 +125,13 @@ class AuthController extends Controller
         return response()->json(auth()->user());
     }
 
-    protected function createNewToken($token){
+    protected function createNewToken($token)
+    {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => auth('api')->user()
         ]);
     }
 
