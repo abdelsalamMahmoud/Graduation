@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\StudentController;
 use App\Http\Controllers\V1\TeacherController;
 use Illuminate\Http\Request;
@@ -32,8 +33,8 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
-Route::get('/users', [StudentController::class, 'index']);
-Route::get('user/{id}', [StudentController::class, 'show']);
-Route::post('create_user', [StudentController::class, 'store']);
-Route::post('update/{id}', [StudentController::class, 'update']);
-Route::post('delete/{id}', [StudentController::class, 'destroy']);
+Route::get('/users', [AdminController::class, 'index']);
+Route::get('user/{id}', [AdminController::class, 'show']);
+Route::post('create_user', [AdminController::class, 'store']);
+Route::post('update/{id}', [AdminController::class, 'update']);
+Route::post('delete/{id}', [AdminController::class, 'destroy']);
