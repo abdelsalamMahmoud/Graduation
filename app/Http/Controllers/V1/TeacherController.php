@@ -15,10 +15,4 @@ class TeacherController extends Controller
         $this->middleware('is_teacher');
     }
     
-    public function index(){
-        $teachers = User::where('role',2)->paginate(5);
-        $teacherresource=TeacherProfileResource::collection($teachers);
-        return $this->apiResponse($teacherresource, 'ok', 200);
-    }
-    
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\V1\StudentController;
+use App\Http\Controllers\V1\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,3 +36,4 @@ Route::get('/users', [StudentController::class, 'index']);
 Route::get('user/{id}', [StudentController::class, 'show']);
 Route::post('create_user', [StudentController::class, 'store']);
 Route::post('update/{id}', [StudentController::class, 'update']);
+Route::post('delete/{id}', [StudentController::class, 'destroy']);

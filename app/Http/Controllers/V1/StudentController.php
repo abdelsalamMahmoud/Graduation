@@ -35,40 +35,56 @@ class StudentController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'fullName' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:0,1,2',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'fullName' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8',
+        'role' => 'required|in:0,1,2',
+        'status' => 'nullable|string',
+        'verification_code' => 'nullable|string',
+        'verification_expires_at' => 'nullable|date',
+        'is_verified' => 'boolean',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation errors',
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        $user = User::create($request->all());
-        if ($user) {
-            return response()->json([
-                'message' => 'user created successfully!',
-                'user' => $user
-            ], 201);
-        } else {
-            return response()->json([
-                'message' => 'Failed to create user'
-            ], 500);
-        }
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation errors',
+            'errors' => $validator->errors()
+        ], 400);
     }
+
+    $password = Hash::make($request->password);
+
+    $user = User::create([
+        'fullName' => $request->fullName,
+        'email' => $request->email,
+        'password' => $password, 
+        'role' => $request->role,
+        'status' => $request->status,
+        'verification_code' => $request->verification_code,
+        'verification_expires_at' => $request->verification_expires_at,
+        'is_verified' => $request->is_verified,
+    ]);
+
+    if ($user) {
+        return response()->json([
+            'message' => 'User created successfully!',
+            'user' => $user
+        ], 201);
+    } else {
+        return response()->json([
+            'message' => 'Failed to create user'
+        ], 500);
+    }
+}
 
     public function update(Request $request, $id){
         $user = User::findOrFail($id);
         $validator = Validator::make($request->all(), [
             'fullName' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8',
             'role' => 'required|in:0,1,2',
         ]);
 
