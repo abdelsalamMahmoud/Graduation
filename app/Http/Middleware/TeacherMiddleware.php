@@ -17,7 +17,7 @@ class TeacherMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->role == 2 ){
+        if(auth('api')->user()->role == 2 ){
             return $next($request);
         }
         else return response()->json('you are not a teacher');

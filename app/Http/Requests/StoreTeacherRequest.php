@@ -28,7 +28,7 @@ class StoreTeacherRequest extends FormRequest
             'fname'=>['required', 'regex:/^[a-zA-Z\s\.\-]+$/'],
             'lname'=>['required', 'regex:/^[a-zA-Z\s\.\-]+$/'],
             'bio'=>['nullable', 'regex:/^[a-zA-Z0-9\s\.\,\-]+$/'],
-            'profile_pic'=>['nullable', 'url'],
+            'profile_pic' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'specialty'=>['required', 'regex:/^[a-zA-Z\s\.\-]+$/'],
             'years_of_experience'=>['required', 'integer', 'min:0'],
         ];
