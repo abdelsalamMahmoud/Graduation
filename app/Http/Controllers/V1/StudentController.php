@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Log;
 class StudentController extends Controller
 {
     use ApiResopnseTrait;
-    // public function __construct()
-    //     {
-    //         $this->middleware('auth:api');
-    //     }
+     public function __construct()
+         {
+             $this->middleware('auth:api');
+         }
 
         public function requestPlan(StorePlanRequest $request)
         {
@@ -27,10 +27,21 @@ class StudentController extends Controller
                     $request->except(['_token']),
                     [
                         'task_per_day'=>$taskPerDay,
-                        'user_id'=>Auth::user()->id
+                        'user_id'=>auth('api')->user()->id
                     ]
                 ));
                 return $this->apiResponse($plan,'your plan is Ready',201);
+
+            } catch (\Exception $e) {
+                return $this->apiResponse(null,'Please Try Again',400);
+            }
+        }
+
+        public function get_plans()
+        {
+            try {
+                $plans = Plan::where('user_id',auth('api')->user()->id)->paginate(10);
+                return $this->apiResponse($plans,'these are your plans',200);
 
             } catch (\Exception $e) {
                 return $this->apiResponse(null,'Please Try Again',400);
@@ -41,7 +52,7 @@ class StudentController extends Controller
         {
             try {
                 $teachers = TeacherProfile::paginate(10);
-        
+
                 if ($teachers->isEmpty()) {
                     return response()->json([
                         'message' => 'No teachers found',
@@ -49,7 +60,7 @@ class StudentController extends Controller
                 }
                 $teacherresource = TeacherResource::collection($teachers);
                 return $this->apiResponse($teacherresource, 'ok', 200);
-                
+
             } catch (Exception $e) {
                 return response()->json([
                     'message' => 'An error while fetching teachers',
@@ -57,4 +68,4 @@ class StudentController extends Controller
                 ], 500);
             }
         }
-    }        
+    }

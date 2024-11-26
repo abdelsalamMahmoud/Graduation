@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->integer('number_of_days');
             $table->integer('task_per_day');
-            $table->integer('progress')->nullable();
+            $table->integer('progress')->default(0);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -16,9 +16,7 @@ class StorePlanRequest extends FormRequest
         return [
             'amount'=>'required',
             'number_of_days'=>'required',
-            'task_per_day'=>'required',
             'progress'=>'nullable',
-            'user_id'=>'required',
         ];
     }
 }

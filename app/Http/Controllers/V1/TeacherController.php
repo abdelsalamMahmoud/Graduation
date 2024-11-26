@@ -13,20 +13,15 @@ use App\Http\Requests\V1\StoreTeacherRequest;
 class TeacherController extends Controller
 {
     use ApiResopnseTrait;
-    // public function __construct()
-    // {
-    //     $this->middleware('is_teacher');
-    // }
+     public function __construct()
+     {
+         $this->middleware('is_teacher');
+     }
 
     public function store(StoreTeacherRequest $request)
     {
         try {
-                $userId = Auth::id();
-                if ($userId == null) {
-                    return response()->json([
-                        'message' => 'User not authenticated',
-                    ], 401);
-                }
+                $userId = auth('api')->user()->id;
 
                 if (TeacherProfile::where('user_id', $userId)->exists()) {
                     return response()->json([
@@ -63,6 +58,6 @@ class TeacherController extends Controller
         }
     }
 
-        
-        
+
+
 }

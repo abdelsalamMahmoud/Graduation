@@ -43,10 +43,13 @@ Route::group(['prefix'=>'v1/admin'],function (){
 
 });
 
-Route::prefix('teacher')->group(function () {
-    Route::post('store_teacher_of_data',[TeacherController::class, 'store']);
+Route::group(['prefix'=>'v1/student'],function (){
+    Route::post('request_plan', [StudentController::class, 'requestPlan']);
+    Route::get('get_plans', [StudentController::class, 'get_plans']);
 });
 
-Route::prefix('TeacherList')->group(function () {
-    Route::get('display_teachers_to_user',[StudentController::class, 'index']);
+Route::group(['prefix'=>'v1/teacher'],function (){
+    Route::post('store', [TeacherController::class, 'store']);
 });
+
+
