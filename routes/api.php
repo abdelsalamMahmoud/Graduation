@@ -40,3 +40,7 @@ Route::prefix('admin')->group(function () {
     Route::post('update/{id}', [AdminController::class, 'update']);
     Route::post('delete/{id}', [AdminController::class, 'destroy']);
 });
+
+Route::prefix('teacher')->group(function () {
+    Route::post('store_teacher_of_data',[TeacherController::class, 'store']);
+});

@@ -25,21 +25,20 @@ class StoreUserRequest extends FormRequest
     {
         return [
             //
-                    'fullName' => 'required|string|max:255',
-                    'email' => 'required|string|email|max:255|unique:users',
-                    'password' => 'required|string|min:8',
-                    'role' => 'required|in:0,1,2',
-                ];
+                    'fullName' => ['required', 'regex:/^[a-zA-Z0-9\s\.\-]+$/', 'max:255'],
+                    'email' => ['required', 'regex:/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$/', 'unique:users,email'],
+                    'password' => ['required','string','min:8','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+                    'role' => ['required', 'regex:/^[0-2]$/'],
+               ];
     }
-
-    protected function failedValidation(Validator $validator)
+    
+    public function messages(): array
     {
-        $errors = $validator->errors();
-        $response = response()->json([
-            'message' => 'Validation failed',
-            'errors' => $errors
-        ], 422);
-
-        throw new HttpResponseException($response);
+        return [
+            'fullName.regex' => 'The full name may only contain letters, numbers, spaces, dots, and hyphens.',
+            'email.regex' => 'The email format is invalid.',
+            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',            
+            'role.regex' => 'The role must be one of the following values: 0, 1, or 2.',
+        ];
     }
 }
