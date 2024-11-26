@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
     use ApiResopnseTrait;
-    // public function __construct()
-    // {
-    //     $this->middleware('is_admin');
-    // }
+     public function __construct()
+     {
+         $this->middleware('is_admin');
+     }
 
     public function index(){
         try{
@@ -41,7 +40,7 @@ class AdminController extends Controller
             return response()->json([
                 'message' => 'Error fetching users',
                 'error' => $e->getMessage(),
-            ], 404);        
+            ], 404);
         }
         catch (\Exception $e) {
             return response()->json([
@@ -55,18 +54,17 @@ class AdminController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-            $password = Hash::make($request->password);
                 $user = User::create([
                 'fullName' => $request->fullName,
                 'email' => $request->email,
-                'password' => $password,
+                'password' => Hash::make('12345678'),
                 'role' => $request->role,
             ]);
             return response()->json([
                 'message' => 'User created successfully!',
                 'user' => $user
             ], 201);
-        } 
+        }
         catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to create user',
@@ -74,7 +72,7 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    
+
     public function update(StoreUserRequest $request, $id){
         try{
         $user = User::findOrFail($id);

@@ -33,10 +33,15 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
-Route::prefix('admin')->group(function () {
+
+Route::group(['prefix'=>'v1/admin'],function (){
     Route::get('/users', [AdminController::class, 'index']);
     Route::get('user/{id}', [AdminController::class, 'show']);
     Route::post('create_user', [AdminController::class, 'store']);
     Route::post('update/{id}', [AdminController::class, 'update']);
     Route::post('delete/{id}', [AdminController::class, 'destroy']);
+});
+
+Route::group(['prefix'=>'v1/student'],function (){
+    Route::post('/request_plan', [StudentController::class, 'requestPlan']);
 });
