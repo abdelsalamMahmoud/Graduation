@@ -3,20 +3,11 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\StudentController;
-use App\Http\Controllers\V1\TeacherController;
+use App\Http\Controllers\V1\TeacherProfileController;
+use App\Http\Controllers\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -35,11 +26,14 @@ Route::group([
 });
 
 Route::group(['prefix'=>'v1/admin'],function (){
-    Route::get('/users', [AdminController::class, 'index']);
-    Route::get('user/{id}', [AdminController::class, 'show']);
-    Route::post('create_user', [AdminController::class, 'store']);
-    Route::post('update/{id}', [AdminController::class, 'update']);
-    Route::post('delete/{id}', [AdminController::class, 'destroy']);
+
+    //START MANAGE USERS ROUTE
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('user/{id}', [UserController::class, 'show']);
+    Route::post('create_user', [UserController::class, 'store']);
+    Route::post('update/{id}', [UserController::class, 'update']);
+    Route::post('delete/{id}', [UserController::class, 'destroy']);
+    //END MANAGE USERS ROUTE
 
 });
 
@@ -49,7 +43,7 @@ Route::group(['prefix'=>'v1/student'],function (){
 });
 
 Route::group(['prefix'=>'v1/teacher'],function (){
-    Route::post('store', [TeacherController::class, 'store']);
+    Route::post('update_info', [TeacherProfileController::class, 'update_info']);
 });
 
 

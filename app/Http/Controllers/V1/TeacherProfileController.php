@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\V1\StoreTeacherRequest;
 // use App\Http\Requests\StoreTeacherRequest;
 
-class TeacherController extends Controller
+class TeacherProfileController extends Controller
 {
     use ApiResopnseTrait;
      public function __construct()
@@ -18,7 +18,7 @@ class TeacherController extends Controller
          $this->middleware('is_teacher');
      }
 
-    public function store(StoreTeacherRequest $request)
+    public function update_info(StoreTeacherRequest $request)
     {
         try {
                 $userId = auth('api')->user()->id;
@@ -32,8 +32,8 @@ class TeacherController extends Controller
 
                 $profilePicPath = null;
                 if ($request->hasFile('profile_pic')) {
-                    $profile_pictur = $request->file('profile_pic');
-                    $profilePicPath = $profile_pictur->store('profile_pictures', 'public');
+                    $profile_picture = $request->file('profile_pic');
+                    $profilePicPath = $profile_picture->store('profile_pictures', 'public');
                 }
 
                 $teachers = TeacherProfile::create([
@@ -57,7 +57,5 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-
-
 
 }
