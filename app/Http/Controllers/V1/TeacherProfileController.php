@@ -13,10 +13,6 @@ use App\Http\Requests\V1\StoreTeacherRequest;
 class TeacherProfileController extends Controller
 {
     use ApiResopnseTrait;
-     public function __construct()
-     {
-         $this->middleware('is_teacher');
-     }
 
     public function update_info(StoreTeacherRequest $request)
     {

@@ -13,11 +13,5 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AdminController extends Controller
 {
     use ApiResopnseTrait;
-     public function __construct()
-     {
-         $this->middleware('is_admin');
-     }
-
-
 
 }
