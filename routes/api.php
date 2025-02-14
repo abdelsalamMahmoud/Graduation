@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\V1\AdminController;
+use App\Http\Controllers\V1\CourseController;
 use App\Http\Controllers\V1\PlanController;
 use App\Http\Controllers\V1\ScheduleController;
 use App\Http\Controllers\V1\StudentController;
@@ -48,9 +49,17 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
 
     Route::post('/update_info', [TeacherProfileController::class, 'update_info']);
 
+    //SCHEDULES MANAGEMENT
     Route::put('/accept_schedule/{id}', [ScheduleController::class, 'accept']);
     Route::put('/reject_schedule/{id}', [ScheduleController::class, 'reject']);
     Route::delete('/delete_schedule/{id}', [ScheduleController::class, 'destroy']);
+
+    //COURSES MANAGEMENT
+    Route::get('/get_course/{id}', [CourseController::class, 'show']);
+    Route::post('/create_course', [CourseController::class, 'store']);
+    Route::put('/update_course/{id}', [CourseController::class, 'update']);
+    Route::put('/publish_course/{id}', [CourseController::class, 'publish_course']);
+    Route::delete('/delete_course/{id}', [CourseController::class, 'destroy']);
 });
 //END TEACHER ROUTES
 
