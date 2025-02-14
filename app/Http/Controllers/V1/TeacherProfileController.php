@@ -8,7 +8,6 @@ use App\Models\TeacherProfile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\V1\StoreTeacherRequest;
-// use App\Http\Requests\StoreTeacherRequest;
 
 class TeacherProfileController extends Controller
 {

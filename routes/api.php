@@ -12,6 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
+
+
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -79,7 +83,17 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
 
 
 });
-//END STUDENT ROUTES
 
+Route::group(['prefix'=>'v1/student'],function (){
+    Route::post('request_plan', [StudentController::class, 'requestPlan']);
+    Route::get('get_plans', [StudentController::class, 'get_plans']);
+});
 
-
+Route::group(['prefix'=>'v1/teacher'],function (){
+    Route::post('update_info', [TeacherProfileController::class, 'update_info']);
+});
+ 
+Route::group(['prefix' => 'v1/progress'], function () {
+    Route::post('/update-progress/{studentId}', [PlanController::class, 'updateProgress']);
+    Route::get('/{id}/view/student/Progress', [PlanController::class, 'ViewStudentProgress']);
+});

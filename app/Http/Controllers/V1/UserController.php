@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\V1;
-
+use Exception; 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Resources\UserResource;
