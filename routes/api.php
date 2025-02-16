@@ -41,12 +41,12 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
     Route::post('/create_user', [UserController::class, 'store']);
     Route::post('/update/{id}', [UserController::class, 'update']);
     Route::post('/delete/{id}', [UserController::class, 'destroy']);
+    Route::post('delete/multible/user', [UserController::class, 'deleteMultibleUsers']);
+
     //END MANAGE USERS ROUTE
 });
 //END ADMIN ROUTES
 
-
-Route::post('delete/multible/user', [UserController::class, 'deleteMultibleUsers']);
 
 
 //START TEACHER ROUTES
