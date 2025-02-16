@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+// use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('is_admin');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('is_admin');
+    // }
 
     public function index(){
         try{
@@ -60,7 +63,7 @@ class UserController extends Controller
                 'role' => $request->role,
             ]);
             return response()->json([
-                'message' => 'User created successfully!',
+                'message' => 'User created successfully',
                 'user' => $user
             ], 201);
         }
@@ -102,5 +105,27 @@ class UserController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function deleteMultibleUsers(Request $request){
+       
+        $validator = Validator::make($request->all(), [
+            'user_ids'   => 'required|array', 
+            'user_ids.*' => 'integer|exists:users,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        User::whereIn('id', $request->user_ids)->delete();
+
+        return response()->json([
+            'message' => 'Selected users have been deleted successfully',
+            'deleted_user_ids' => $request->user_ids
+        ], 200);
     }
 }
