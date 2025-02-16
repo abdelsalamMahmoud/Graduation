@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-// use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -14,10 +13,10 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('is_admin');
-    // }
+    public function __construct()
+    {
+        $this->middleware('is_admin');
+    }
 
     public function index(){
         try{
