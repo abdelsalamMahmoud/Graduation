@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\V1;
-use Exception; 
+use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreUserRequest;
 use App\Http\Resources\UserResource;
@@ -106,10 +106,10 @@ class UserController extends Controller
         }
     }
 
-    public function deleteMultibleUsers(Request $request){
-       
+    public function deleteMultipleUsers(Request $request){
+
         $validator = Validator::make($request->all(), [
-            'user_ids'   => 'required|array', 
+            'user_ids'   => 'required|array',
             'user_ids.*' => 'integer|exists:users,id'
         ]);
 

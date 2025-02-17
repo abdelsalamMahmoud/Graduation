@@ -19,35 +19,6 @@ class StudentController extends Controller
              $this->middleware('auth:api');
          }
 
-        public function requestPlan(StorePlanRequest $request)
-        {
-            try {
-                $taskPerDay = $request->amount / $request->number_of_days ;
-                $plan = Plan::create(array_merge(
-                    $request->except(['_token']),
-                    [
-                        'task_per_day'=>$taskPerDay,
-                        'user_id'=>auth('api')->user()->id
-                    ]
-                ));
-
-                return $this->apiResponse($plan,'your plan is Ready',201);
-
-            } catch (\Exception $e) {
-                return $this->apiResponse(null,'Please Try Again',400);
-            }
-        }
-
-        public function get_plans()
-        {
-            try {
-                $plans = Plan::where('user_id',auth('api')->user()->id)->paginate(10);
-                return $this->apiResponse($plans,'these are your plans',200);
-
-            } catch (\Exception $e) {
-                return $this->apiResponse(null,'Please Try Again',400);
-            }
-        }
 
         public function index()
         {
@@ -69,4 +40,6 @@ class StudentController extends Controller
                 ], 500);
             }
         }
-    }
+
+
+}

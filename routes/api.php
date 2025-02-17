@@ -8,6 +8,7 @@ use App\Http\Controllers\V1\ScheduleController;
 use App\Http\Controllers\V1\StudentController;
 use App\Http\Controllers\V1\TeacherProfileController;
 use App\Http\Controllers\V1\UserController;
+use App\Http\Controllers\V1\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,8 +42,7 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
     Route::post('/create_user', [UserController::class, 'store']);
     Route::post('/update/{id}', [UserController::class, 'update']);
     Route::post('/delete/{id}', [UserController::class, 'destroy']);
-    Route::post('delete/multible/user', [UserController::class, 'deleteMultibleUsers']);
-
+    Route::post('delete/multiple/user', [UserController::class, 'deleteMultipleUsers']);
     //END MANAGE USERS ROUTE
 });
 //END ADMIN ROUTES
@@ -65,11 +65,16 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::put('/update_course/{id}', [CourseController::class, 'update']);
     Route::put('/publish_course/{id}', [CourseController::class, 'publish_course']);
     Route::delete('/delete_course/{id}', [CourseController::class, 'destroy']);
+
+    //COURSES VIDEOS MANAGEMENT
+    Route::post('/upload_video/{course_id}', [VideoController::class, 'store']);
+
+
+
+
+
 });
 //END TEACHER ROUTES
-
-
-
 
 
 //START STUDENT ROUTES
@@ -78,23 +83,10 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     //Plans routes
     Route::get('/get_plans', [PlanController::class, 'index']);
     Route::post('/request_plan', [PlanController::class, 'store']);
+    Route::post('/update-progress/{studentId}', [PlanController::class, 'updateProgress']);
+    Route::get('/{id}/view/student/Progress', [PlanController::class, 'ViewStudentProgress']);
 
     //schedule routes
     Route::post('/request_schedule', [ScheduleController::class, 'store']);
-
-
 });
 
-Route::group(['prefix'=>'v1/student'],function (){
-    Route::post('request_plan', [StudentController::class, 'requestPlan']);
-    Route::get('get_plans', [StudentController::class, 'get_plans']);
-});
-
-Route::group(['prefix'=>'v1/teacher'],function (){
-    Route::post('update_info', [TeacherProfileController::class, 'update_info']);
-});
- 
-Route::group(['prefix' => 'v1/progress'], function () {
-    Route::post('/update-progress/{studentId}', [PlanController::class, 'updateProgress']);
-    Route::get('/{id}/view/student/Progress', [PlanController::class, 'ViewStudentProgress']);
-});

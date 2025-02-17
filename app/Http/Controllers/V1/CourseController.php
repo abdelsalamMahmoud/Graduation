@@ -19,13 +19,13 @@ class CourseController extends Controller
     public function store(StoreCourseRequest $request)
     {
         try {
-            $schedule = Course::create(array_merge(
+            $course = Course::create(array_merge(
                 $request->except(['_token']),
                 [
                     'teacher_id'=>auth('api')->user()->id,
                 ]
             ));
-            return $this->apiResponse($schedule,'Course Created successfully',200);
+            return $this->apiResponse($course,'Course Created successfully',200);
 
         } catch (\Exception $e) {
             return $this->apiResponse(null,'Please Try Again',400);
