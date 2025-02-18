@@ -23,5 +23,4 @@ class TeacherMiddleware
         else return response()->json('you are not a teacher');
     }
 
-
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\CourseController;
 use App\Http\Controllers\V1\PlanController;
+use App\Http\Controllers\V1\RateController;
 use App\Http\Controllers\V1\ScheduleController;
 use App\Http\Controllers\V1\StudentController;
 use App\Http\Controllers\V1\TeacherProfileController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\V1\UserController;
 use App\Http\Controllers\V1\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -70,7 +72,9 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::post('/upload_video/{course_id}', [VideoController::class, 'store']);
 
 
-
+    //Get RATE
+    Route::get('/teacher/{teacher_id}/ratings', [RateController::class, 'getTeacherRatings']); 
+    Route::get('/teacher/{teacher_id}/average-rating', [RateController::class, 'averageRating']); 
 
 
 });
@@ -88,5 +92,9 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
 
     //schedule routes
     Route::post('/request_schedule', [ScheduleController::class, 'store']);
-});
 
+    //rate routes
+    Route::post('/store/rate', [RateController::class, 'StoreRate']);
+    Route::post('/rate/{id}', [RateController::class, 'updateRate']);
+    Route::delete('/delete/rate/{id}', [RateController::class, 'deleteRate']);
+});
