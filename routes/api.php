@@ -70,11 +70,13 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
 
     //COURSES VIDEOS MANAGEMENT
     Route::post('/upload_video/{course_id}', [VideoController::class, 'store']);
+    Route::delete('/delete_video/{id}', [VideoController::class, 'destroy']);
+    Route::put('/update_video/{id}', [VideoController::class, 'update']);
 
 
-    //Get RATE
-    Route::get('/teacher/{teacher_id}/ratings', [RateController::class, 'getTeacherRatings']); 
-    Route::get('/teacher/{teacher_id}/average-rating', [RateController::class, 'averageRating']); 
+    //RATES ROUTES
+    Route::get('/teacher/{teacher_id}/ratings', [RateController::class, 'getTeacherRatings']);
+    Route::get('/teacher/{teacher_id}/average-rating', [RateController::class, 'averageRating']);
 
 
 });

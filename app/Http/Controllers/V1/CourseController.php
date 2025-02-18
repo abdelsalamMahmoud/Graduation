@@ -93,6 +93,5 @@ class CourseController extends Controller
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
         }
-
     }
 }
