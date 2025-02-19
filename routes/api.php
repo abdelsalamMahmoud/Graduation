@@ -72,6 +72,7 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::post('/upload_video/{course_id}', [VideoController::class, 'store']);
     Route::delete('/delete_video/{id}', [VideoController::class, 'destroy']);
     Route::put('/update_video/{id}', [VideoController::class, 'update']);
+    Route::get('/get_video/{id}', [VideoController::class, 'show']);
 
 
     //RATES ROUTES
@@ -99,4 +100,11 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     Route::post('/store/rate', [RateController::class, 'StoreRate']);
     Route::post('/rate/{id}', [RateController::class, 'updateRate']);
     Route::delete('/delete/rate/{id}', [RateController::class, 'deleteRate']);
+
+    //STUDENT NOTIFICATIONS
+    Route::get('/get_notifications', [StudentController::class, 'get_notifications']);
+
+    //COURSES AND COURSE CONTENT
+    Route::get('/get_video/{id}', [VideoController::class, 'show'])->middleware('check.subscription');
+
 });

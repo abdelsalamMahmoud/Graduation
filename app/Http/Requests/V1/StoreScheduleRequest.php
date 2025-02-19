@@ -20,6 +20,7 @@ class StoreScheduleRequest extends FormRequest
             'time' => 'required|date_format:H:i',
             'start_date' => 'required|date|after:today',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'duration' => 'required|integer',
         ];
     }
 }

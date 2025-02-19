@@ -59,7 +59,12 @@ class VideoController extends Controller
 
     public function show($id)
     {
-
+        try {
+            $video = Video::find($id);
+            return $this->apiResponse($video,'this is the video',200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
     }
 
     public function update(UpdateVideoRequest $request, $id)

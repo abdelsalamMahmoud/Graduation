@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 
+use App\Models\User;
 use Exception;
 use App\Models\Plan;
 use App\Models\TeacherProfile;
@@ -15,9 +16,20 @@ class StudentController extends Controller
 {
     use ApiResopnseTrait;
      public function __construct()
-         {
-             $this->middleware('auth:api');
+     {
+         $this->middleware('auth:api');
+     }
+
+     public function get_notifications()
+     {
+         try {
+             $user = User::find(auth('api')->user()->id);
+             $notifications = $user->notifications;
+             return $this->apiResponse($notifications,'these are your notifications',200);
+         } catch (\Exception $exception) {
+             return $this->apiResponse(null,'please try again',404);
          }
+     }
 
 
         public function index()

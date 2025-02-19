@@ -14,6 +14,7 @@ class Schedule extends Model
         'teacher_id',
         'days',
         'time',
+        'duration',
         'start_date',
         'end_date',
         'status',
