@@ -3,7 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\CourseController;
+use App\Http\Controllers\V1\ExamController;
 use App\Http\Controllers\V1\PlanController;
+use App\Http\Controllers\V1\QuestionController;
 use App\Http\Controllers\V1\RateController;
 use App\Http\Controllers\V1\ScheduleController;
 use App\Http\Controllers\V1\StudentController;
@@ -73,6 +75,20 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::delete('/delete_video/{id}', [VideoController::class, 'destroy']);
     Route::put('/update_video/{id}', [VideoController::class, 'update']);
     Route::get('/get_video/{id}', [VideoController::class, 'show']);
+
+    //EXAMS ROUTES
+    Route::post('/create_exam', [ExamController::class, 'store']);
+    Route::delete('/delete_exam/{id}', [ExamController::class, 'destroy']);
+    Route::put('/update_exam/{id}', [ExamController::class, 'update']);
+    Route::get('/get_exam/{id}', [ExamController::class, 'show']);
+    Route::get('/get_all_exams', [ExamController::class, 'index']);
+
+    //QUESTIONS ROUTES
+    Route::post('/create_question/{exam_id}', [QuestionController::class, 'store']);
+    Route::delete('/delete_question/{id}', [QuestionController::class, 'destroy']);
+    Route::put('/update_question/{id}', [QuestionController::class, 'update']);
+    Route::get('/get_question/{id}', [QuestionController::class, 'show']);
+    Route::get('/get_all_questions/{exam_id}', [QuestionController::class, 'index']);
 
 
     //RATES ROUTES
