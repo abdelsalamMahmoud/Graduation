@@ -128,4 +128,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     //COURSES AND COURSE CONTENT
     Route::get('/get_video/{id}', [VideoController::class, 'show'])->middleware('check.subscription');
 
+    //SUBMIT EXAM
+    Route::post('/submit_exam', [ExamController::class, 'submit_exam']);
+
 });
