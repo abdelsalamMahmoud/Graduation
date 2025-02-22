@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\CourseController;
 use App\Http\Controllers\V1\ExamController;
+use App\Http\Controllers\V1\OptionController;
 use App\Http\Controllers\V1\PlanController;
 use App\Http\Controllers\V1\QuestionController;
 use App\Http\Controllers\V1\RateController;
@@ -90,12 +91,16 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::get('/get_question/{id}', [QuestionController::class, 'show']);
     Route::get('/get_all_questions/{exam_id}', [QuestionController::class, 'index']);
 
+    //OPTIONS ROUTES
+    Route::post('/create_option/{question_id}', [OptionController::class, 'store']);
+    Route::delete('/delete_option/{id}', [OptionController::class, 'destroy']);
+    Route::put('/update_option/{id}', [OptionController::class, 'update']);
+    Route::get('/get_option/{id}', [OptionController::class, 'show']);
+    Route::get('/get_all_options/{question_id}', [OptionController::class, 'index']);
 
     //RATES ROUTES
     Route::get('/teacher/{teacher_id}/ratings', [RateController::class, 'getTeacherRatings']);
     Route::get('/teacher/{teacher_id}/average-rating', [RateController::class, 'averageRating']);
-
-
 });
 //END TEACHER ROUTES
 

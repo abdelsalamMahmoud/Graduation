@@ -6,23 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateOptionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+        if ($method == 'PUT')
+        {
+            return [
+                'option_text'=>['required'],
+                'is_correct'=>['nullable','boolean'],
+            ];
+        }else{
+            return [
+                'option_text'=>['sometimes','required'],
+                'is_correct'=>['sometimes','nullable','boolean'],
+            ];
+        }
     }
 }

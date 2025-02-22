@@ -45,7 +45,6 @@ class QuestionController extends Controller
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
         }
-
     }
 
     public function update(UpdateQuestionRequest $request, $id)
