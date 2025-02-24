@@ -9,6 +9,7 @@ use App\Http\Controllers\V1\PlanController;
 use App\Http\Controllers\V1\QuestionController;
 use App\Http\Controllers\V1\RateController;
 use App\Http\Controllers\V1\ScheduleController;
+use App\Http\Controllers\V1\SessionController;
 use App\Http\Controllers\V1\StudentController;
 use App\Http\Controllers\V1\TeacherProfileController;
 use App\Http\Controllers\V1\UserController;
@@ -101,6 +102,9 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     //RATES ROUTES
     Route::get('/teacher/{teacher_id}/ratings', [RateController::class, 'getTeacherRatings']);
     Route::get('/teacher/{teacher_id}/average-rating', [RateController::class, 'averageRating']);
+
+    //SESSIONS ROUTES
+    Route::post('/generate_sessions/{schedule_id}', [SessionController::class, 'generateSessionsForSchedule']);
 });
 //END TEACHER ROUTES
 
