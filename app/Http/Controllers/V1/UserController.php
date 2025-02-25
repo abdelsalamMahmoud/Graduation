@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    use ApiResopnseTrait;
     public function __construct()
     {
         $this->middleware('is_admin');

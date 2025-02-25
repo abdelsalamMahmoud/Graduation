@@ -9,10 +9,11 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 class RateController extends Controller
 {
+    use ApiResopnseTrait;
     //
     public function StoreRate(StoreRateRequest $request){
         try{
-            
+
             $rate = Rate::create($request->all());
             return response()->json([
                 'message'=>'Rating submitted successfully',
@@ -33,8 +34,8 @@ class RateController extends Controller
         $rate = Rate::findOrFail($id);
 
         $rate->update([
-            'rate' => $request->rate,  
-            'feedback' => $request->feedback,  
+            'rate' => $request->rate,
+            'feedback' => $request->feedback,
         ]);
 
         return response()->json([
@@ -80,7 +81,7 @@ class RateController extends Controller
             $rate->delete();
 
             return response()->json([
-                'message' => 'Rating deleted successfully', 
+                'message' => 'Rating deleted successfully',
             ],200);
         }
         catch (ModelNotFoundException $e) {
