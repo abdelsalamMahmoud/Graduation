@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FinishSessionRequest;
+use App\Http\Requests\UpdateSessionRequest;
 use App\Models\Schedule;
 use App\Models\Session;
 use Carbon\Carbon;
@@ -53,5 +55,79 @@ class SessionController extends Controller
         return $this->apiResponse($sessions,'Sessions generated successfully',200);
     }
 
+
+    public function teacher_today_sessions()
+    {
+        try {
+            $todaySessions = Session::where('teacher_id',auth('api')->user()->id)->where('date', Carbon::today()->format('Y-m-d'))->paginate(10);
+            return $this->apiResponse($todaySessions,"these are today's sessions",200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+    }
+
+    public function update(UpdateSessionRequest $request , $id)
+    {
+
+    }
+
+    public function cancel_session($id)
+    {
+        try {
+            $session = Session::find($id);
+
+            if($session->teacher_id != auth('api')->user()->id)
+            {
+                return $this->apiResponse(null,'you do not have the permission to cancel this session',200);
+            }
+
+            $session->update([
+                'status'=>'cancelled'
+            ]);
+
+            return $this->apiResponse($session,'session canceled successfully',200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+        $session = Session::find($id);
+
+        if($session->teacher_id != auth('api')->user()->id)
+        {
+            return $this->apiResponse(null,'you do not have the permission to delete this session',200);
+        }
+        $session->delete();
+        return $this->apiResponse(null,'session deleted successfully',200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+    }
+
+    public function finish_session(FinishSessionRequest $request , $id)
+    {
+        try {
+            $session = Session::find($id);
+
+            if($session->teacher_id != auth('api')->user()->id)
+            {
+                return $this->apiResponse(null,'you do not have the permission to finish this session',200);
+            }
+
+            $session->update(array_merge(
+                $request->except(['_token']),
+                [
+                    'status'=>'completed',
+                ]
+            ));
+            return $this->apiResponse($session,'session completed successfully',200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+
+    }
 
 }

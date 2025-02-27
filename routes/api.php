@@ -109,6 +109,11 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
 
     //SESSIONS ROUTES
     Route::post('/generate_sessions/{schedule_id}', [SessionController::class, 'generateSessionsForSchedule']);
+    Route::get('/today_sessions', [SessionController::class, 'teacher_today_sessions']);
+    Route::put('/cancel_session/{id}', [SessionController::class, 'cancel_session']);
+    Route::put('/finish_session/{id}', [SessionController::class, 'finish_session']);
+    Route::delete('/delete_session/{id}', [SessionController::class, 'delete']);
+
 });
 //END TEACHER ROUTES
 
