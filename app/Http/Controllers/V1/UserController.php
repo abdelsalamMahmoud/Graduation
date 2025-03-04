@@ -143,18 +143,28 @@ class UserController extends Controller
         }
     }
 
-//    public function assign_link(Request $request,$user_id)
-//    {
-//        try {
-//            $teacher = TeacherProfile::where('user_id',$user_id)->first();
-//            $teacher->update([
-//                'link'=>$request->link,
-//            ]);
-//            return $this->apiResponse($teacher,'link assigned successfully',200);
-//        } catch (\Exception $exception) {
-//            return $this->apiResponse(null,'please try again',404);
-//        }
-//    }
+    public function assign_link(Request $request, $user_id)
+    {
+        try {
+            $request->validate([
+                'link' => 'required',
+            ]);
+
+            $teacher = TeacherProfile::where('user_id', $user_id)->first();
+
+            if (!$teacher) {
+                return $this->apiResponse(null, 'Teacher not found', 404);
+            }
+
+            $teacher->update([
+                'link' => $request->link,
+            ]);
+
+            return $this->apiResponse($teacher, 'Link assigned successfully', 200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null, 'Please try again', 500);
+        }
+    }
 
 
 }
