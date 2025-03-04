@@ -11,9 +11,19 @@ class CourseController extends Controller
 {
     use ApiResopnseTrait;
 
-    public function index()
+    public function index(?string $id = null)
     {
-
+        try {
+            $user = auth('api')->user();
+            $teacher_id = $user->role == 2 ? $user->id : ($id ?? null);
+            if (!$teacher_id) {
+                return $this->apiResponse(null, 'Invalid request', 400);
+            }
+            $courses = Course::where('teacher_id', $teacher_id)->paginate(10);
+            return $this->apiResponse($courses, 'These are your courses', 200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null, 'Please try again', 500);
+        }
     }
 
     public function store(StoreCourseRequest $request)

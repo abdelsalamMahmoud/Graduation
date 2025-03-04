@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('profile_pic')->nullable();
             $table->string('specialty')->nullable();
             $table->string('years_of_experience')->nullable();
+            $table->string('link')->nullable();
             $table->timestamps();
         });
     }

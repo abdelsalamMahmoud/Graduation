@@ -53,6 +53,8 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
     Route::post('/update/{id}', [UserController::class, 'update']);
     Route::post('/delete/{id}', [UserController::class, 'destroy']);
     Route::post('delete/multiple/user', [UserController::class, 'deleteMultipleUsers']);
+    Route::put('/make_teacher/{id}', [UserController::class, 'make_teacher']);
+    Route::put('/assign_link/{user_id}', [UserController::class, 'assign_link']);
     //END MANAGE USERS ROUTE
 });
 //END ADMIN ROUTES
@@ -71,6 +73,7 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
 
     //COURSES MANAGEMENT
     Route::get('/get_course/{id}', [CourseController::class, 'show']);
+    Route::get('/get_courses/{id?}', [CourseController::class, 'index']);
     Route::post('/create_course', [CourseController::class, 'store']);
     Route::put('/update_course/{id}', [CourseController::class, 'update']);
     Route::put('/publish_course/{id}', [CourseController::class, 'publish_course']);
@@ -138,10 +141,22 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     //STUDENT NOTIFICATIONS
     Route::get('/get_notifications', [StudentController::class, 'get_notifications']);
 
+    //COURSES ROUTES
+    Route::get('/get_courses/{id?}', [CourseController::class, 'index']);
+
     //COURSES AND COURSE CONTENT
     Route::get('/get_video/{id}', [VideoController::class, 'show'])->middleware('check.subscription');
 
     //SUBMIT EXAM
     Route::post('/submit_exam', [ExamController::class, 'submit_exam']);
+
+    //RESULTS ROUTES
+    Route::get('/get_exams_results', [ExamController::class, 'get_all_results']);
+    Route::get('/get_result/{id}', [ExamController::class, 'get_result']);
+
+    //SESSIONS ROUTES
+    Route::get('/today_sessions', [SessionController::class, 'student_today_sessions']);
+    Route::get('/all_sessions', [SessionController::class, 'student_all_sessions']);
+
 
 });

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\V1;
+use App\Models\TeacherProfile;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreUserRequest;
@@ -14,10 +15,6 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     use ApiResopnseTrait;
-    public function __construct()
-    {
-        $this->middleware('is_admin');
-    }
 
     public function index(){
         try{
@@ -128,4 +125,36 @@ class UserController extends Controller
             'deleted_user_ids' => $request->user_ids
         ], 200);
     }
+
+    public function make_teacher($id)
+    {
+        try {
+            $user = User::find($id);
+            $user->update([
+                'role'=>'2'
+            ]);
+
+            $teacher = TeacherProfile::create([
+                'user_id'=>$id
+            ]);
+            return $this->apiResponse($user,'he is now a teacher',200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+    }
+
+//    public function assign_link(Request $request,$user_id)
+//    {
+//        try {
+//            $teacher = TeacherProfile::where('user_id',$user_id)->first();
+//            $teacher->update([
+//                'link'=>$request->link,
+//            ]);
+//            return $this->apiResponse($teacher,'link assigned successfully',200);
+//        } catch (\Exception $exception) {
+//            return $this->apiResponse(null,'please try again',404);
+//        }
+//    }
+
+
 }

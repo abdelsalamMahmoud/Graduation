@@ -10,6 +10,7 @@ use App\Models\Exam;
 use App\Models\Option;
 use App\Models\StudentAnswer;
 use App\Models\StudentExam;
+use App\Models\User;
 
 class ExamController extends Controller
 {
@@ -24,7 +25,6 @@ class ExamController extends Controller
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
         }
-
     }
 
     public function store(StoreExamRequest $request)
@@ -140,4 +140,51 @@ class ExamController extends Controller
     }
 
 
+    public function get_all_results()
+    {
+        try {
+            $student_exams = StudentExam::where('student_id', auth('api')->user()->id)->get();
+
+            if ($student_exams->isEmpty()) {
+                return $this->apiResponse(null, 'No exam results found for this student', 404);
+            }
+
+            $results = $student_exams->map(function ($student_exam) {
+                $exam = Exam::find($student_exam->exam_id);
+                $student = User::find($student_exam->student_id);
+
+                return [
+                    'score' => $student_exam->score,
+                    'exam' => $exam ? $exam->title : 'Exam not found',
+                    'student' => $student ? $student->fullName : 'Student not found'
+                ];
+            });
+
+            return $this->apiResponse($results, "These are all exam results for you", 200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null, 'Please try again', 500);
+        }
+    }
+
+
+    public function get_result($id)
+    {
+        try {
+            $student_exam = StudentExam::find($id);
+            if($student_exam->student_id != auth('api')->user()->id)
+            {
+                return $this->apiResponse(null,'you do not have the permission to access this result',403);
+            }
+            $exam = Exam::find($student_exam->exam_id);
+            $student = User::find($student_exam->student_id);
+            $data =[
+                'score'=>$student_exam->score,
+                'exam'=>$exam->title,
+                'student'=>$student->fullName
+            ];
+            return $this->apiResponse($data,"this is the result",200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+    }
 }

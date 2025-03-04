@@ -19,6 +19,7 @@ class TeacherProfile extends Model
         'specialty',
         'years_of_experience',
         'user_id',
+        'link',
     ];
 
     public function user(): BelongsTo
