@@ -21,6 +21,8 @@ class TeacherMiddleware
             return $next($request);
         }
         else return response()->json('you are not a teacher');
+        
+
     }
 
 }
