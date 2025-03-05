@@ -67,6 +67,7 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::post('/update_info', [TeacherProfileController::class, 'update_info']);
 
     //SCHEDULES MANAGEMENT
+    Route::get('/get_schedules_requests', [ScheduleController::class, 'index']);
     Route::put('/accept_schedule/{id}', [ScheduleController::class, 'accept']);
     Route::put('/reject_schedule/{id}', [ScheduleController::class, 'reject']);
     Route::delete('/delete_schedule/{id}', [ScheduleController::class, 'destroy']);

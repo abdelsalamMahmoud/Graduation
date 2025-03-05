@@ -13,6 +13,16 @@ class ScheduleController extends Controller
 {
     use ApiResopnseTrait;
 
+    public function index()
+    {
+        try {
+            $schedule_requests = Schedule::where('teacher_id', auth('api')->user()->id)->where('status','pending')->with('student:id,fullName')->paginate(10);
+            return $this->apiResponse($schedule_requests, 'These are all requests', 200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null, 'Please try again', 500);
+        }
+    }
+
     public function store(StoreScheduleRequest $request)
     {
         try {
