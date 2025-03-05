@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
         'is_admin' => \App\Http\Middleware\AdminMiddleware::class,
         'is_teacher' => \App\Http\Middleware\TeacherMiddleware::class,
         'check.subscription' => \App\Http\Middleware\CheckSubscription::class,
+        'ensure.student.subscription'=>  \App\Http\Middleware\EnsureStudentSubscription::class,
 
     ];
 }
