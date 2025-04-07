@@ -81,6 +81,7 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::delete('/delete_course/{id}', [CourseController::class, 'destroy']);
 
     //COURSES VIDEOS MANAGEMENT
+    Route::get('/get_videos/{course_id}', [VideoController::class, 'index']);
     Route::post('/upload_video/{course_id}', [VideoController::class, 'store']);
     Route::delete('/delete_video/{id}', [VideoController::class, 'destroy']);
     Route::put('/update_video/{id}', [VideoController::class, 'update']);
