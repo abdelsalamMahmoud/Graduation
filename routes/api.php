@@ -67,6 +67,7 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::put('/accept_schedule/{id}', [ScheduleController::class, 'accept']);
     Route::put('/reject_schedule/{id}', [ScheduleController::class, 'reject']);
     Route::delete('/delete_schedule/{id}', [ScheduleController::class, 'destroy']);
+    Route::get('/accepted_schedules', [ScheduleController::class, 'get_accepted_schedules']);
 
     //COURSES MANAGEMENT
     Route::get('/get_course/{id}', [CourseController::class, 'show']);
@@ -158,7 +159,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
 
 
     //STUDENT EXAM
-    Route::middleware(['auth:sanctum', 'ensure.student.subscription'])->group(function () {
+    Route::middleware(['ensure.student.subscription'])->group(function () {
         Route::get('/get_exam/{id}', [ExamController::class, 'show']);
         Route::get('/get_all_exams', [ExamController::class, 'index']);
     });

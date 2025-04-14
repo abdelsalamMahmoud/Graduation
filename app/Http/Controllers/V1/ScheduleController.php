@@ -93,7 +93,16 @@ class ScheduleController extends Controller
         } catch (\Exception $e) {
             return $this->apiResponse(null,'Please Try Again',400);
         }
+    }
 
+    public function get_accepted_schedules()
+    {
+        try {
+            $schedules = Schedule::where('teacher_id',auth('api')->user()->id)->where('status','approved')->paginate(10);
+            return $this->apiResponse($schedules,'these are accepted schedules',200);
+        } catch (\Exception $e) {
+            return $this->apiResponse(null,'Please Try Again',400);
+        }
     }
 
 

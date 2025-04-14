@@ -134,7 +134,7 @@ class SessionController extends Controller
     public function student_today_sessions()
     {
         try {
-            $todaySessions = Session::where('student_id',auth('api')->user()->id)->where('date', Carbon::today()->format('Y-m-d'))->paginate(10);
+            $todaySessions = Session::where('student_id',auth('api')->user()->id)->where('date', Carbon::today()->format('Y-m-d'))->with('teacher')->paginate(10);
             return $this->apiResponse($todaySessions,"these are today's sessions",200);
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
@@ -144,7 +144,7 @@ class SessionController extends Controller
     public function student_all_sessions()
     {
         try {
-            $todaySessions = Session::where('student_id',auth('api')->user()->id)->paginate(10);
+            $todaySessions = Session::where('student_id',auth('api')->user()->id)->with('teacher')->paginate(10);
             return $this->apiResponse($todaySessions,"these are all sessions for you",200);
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
