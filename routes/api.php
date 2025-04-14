@@ -19,10 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
-Route::post('/verify', [AuthController::class, 'verify'])->name('verify');
-
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -37,7 +33,7 @@ Route::group([
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
-    // Route::post('/verify', [AuthController::class, 'verify']);
+    Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
@@ -81,6 +77,7 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::delete('/delete_course/{id}', [CourseController::class, 'destroy']);
 
     //COURSES VIDEOS MANAGEMENT
+    Route::get('/get_videos/{course_id}', [VideoController::class, 'index']);
     Route::post('/upload_video/{course_id}', [VideoController::class, 'store']);
     Route::delete('/delete_video/{id}', [VideoController::class, 'destroy']);
     Route::put('/update_video/{id}', [VideoController::class, 'update']);
