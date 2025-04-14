@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
+Route::post('/verify', [AuthController::class, 'verify'])->name('verify');
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -33,7 +37,7 @@ Route::group([
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/verify', [AuthController::class, 'verify']);
+    // Route::post('/verify', [AuthController::class, 'verify']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
@@ -156,10 +160,10 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     Route::get('/all_sessions', [SessionController::class, 'student_all_sessions']);
 
 
-    //STUDENT EXAM 
-    Route::middleware(['ensure.student.subscription'])->group(function () {
+    //STUDENT EXAM
+    Route::middleware(['auth:sanctum', 'ensure.student.subscription'])->group(function () {
         Route::get('/get_exam/{id}', [ExamController::class, 'show']);
         Route::get('/get_all_exams', [ExamController::class, 'index']);
-    });    
+    });
 
 });

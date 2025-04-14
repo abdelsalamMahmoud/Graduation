@@ -17,32 +17,69 @@ class AuthController extends Controller
     }
 
 
+    // public function login(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'email' => 'required|email|exists:users,email',
+    //         'password' => 'required|string|min:6',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 422);
+    //     }
+
+    //     $credentials = $validator->validated();
+    //     if (!$token = auth()->attempt($credentials)) {
+    //         return response()->json(['error' => 'email or password is incorrect'], 401);
+    //     }
+
+    //     $user = auth()->user();
+
+    //     if (!$user->is_verified) {
+    //         auth()->logout();
+    //         return response()->json(['error' => 'User not verified. Please verify email.'], 403);
+    //     }
+
+    //     $token = auth('api')->login($user);
+
+    //     return $this->createNewToken($token);
+    // }
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email',
+        // Validate the request
+        $request->validate([
+            'email' => 'required|email',
             'password' => 'required|string|min:6',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        // Get credentials
+        $credentials = $request->only('email', 'password');
+
+        try {
+            // Attempt to authenticate and generate a token
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['message' => 'بيانات تسجيل الدخول غير صحيحة'], 401);
+            }
+
+            // Get the authenticated user
+            $user = JWTAuth::user();
+
+            // Optionally check if the user is verified (if you want this logic)
+            if (!$user->is_verified) {
+                JWTAuth::invalidate($token); // Invalidate the token if not verified
+                return response()->json(['message' => 'الرجاء التحقق من بريدك الإلكتروني أولاً'], 403);
+            }
+
+            return response()->json([
+                'message' => 'تم تسجيل الدخول بنجاح',
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth('api')->factory()->getTTL() * 60, // TTL in seconds
+                'user' => $user,
+            ], 200);
+        } catch (JWTException $e) {
+            return response()->json(['message' => 'فشل في إنشاء التوكن'], 500);
         }
-
-        $credentials = $validator->validated();
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'email or password is incorrect'], 401);
-        }
-
-        $user = auth()->user();
-
-        if (!$user->is_verified) {
-            auth()->logout();
-            return response()->json(['error' => 'User not verified. Please verify email.'], 403);
-        }
-
-        $token = auth('api')->login($user);
-
-        return $this->createNewToken($token);
     }
 
     public function register(Request $request) {
