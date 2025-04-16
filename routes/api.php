@@ -141,10 +141,10 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     Route::get('/get_notifications', [StudentController::class, 'get_notifications']);
 
     //LATEST TREE NOTIFICATIONS
-    Route::get('/get_latest_notify', [StudentController::class, 'latestNotifications']);
+    Route::get('/latest_notifications', [StudentController::class, 'latestNotifications']);
 
     // LATEST TWO COURSES
-    Route::get('get/latest/two/courses', [StudentController::class, 'latestCourses']);
+    Route::get('/latest_courses', [StudentController::class, 'latestCourses']);
 
     //COURSES ROUTES
     Route::get('/get_courses/{id?}', [CourseController::class, 'index']);

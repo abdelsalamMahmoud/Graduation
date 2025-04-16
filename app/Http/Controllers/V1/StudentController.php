@@ -63,7 +63,7 @@ class StudentController extends Controller
 
                 $teacher = $student->teacher;
 
-                $latestCourses = Course::where('teacher_id', $teacher->id)->latest()->take(2)->get();
+                $latestCourses = Course::where('teacher_id', $teacher->user_id)->latest()->take(2)->get();
 
                 return response()->json([
                     'message' => 'Latest 2 courses retrieved successfully',
@@ -83,14 +83,14 @@ class StudentController extends Controller
         public function latestNotifications(Request $request)
         {
             try {
-                $student = $request->user(); 
+                $student = $request->user();
                 $notifications = $student->notifications()->latest()->take(3)->get();
 
                 return response()->json([
                     'message' => 'Latest 3 notifications retrieved successfully',
                     'data' => $notifications
                 ], 200);
-                
+
             } catch (Exception $e) {
                 return response()->json([
                     'message' => 'An error occurred while fetching notifications',
