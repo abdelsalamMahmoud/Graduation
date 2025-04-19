@@ -106,4 +106,15 @@ class ScheduleController extends Controller
     }
 
 
+    public function schedules_requests_list()
+    {
+        try {
+            $schedules_requests = Schedule::where('student_id', auth('api')->user()->id)->with('teacher:id,fullName')->paginate(10);
+            return $this->apiResponse($schedules_requests, 'These are your requests', 200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null, 'Please try again', 500);
+        }
+    }
+
+
 }
