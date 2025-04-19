@@ -146,6 +146,9 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     // LATEST TWO COURSES
     Route::get('/latest_courses', [StudentController::class, 'latestCourses']);
 
+    // TEACHERS LIST
+    Route::get('/teachers_list', [StudentController::class, 'teachers_list']);
+
     //COURSES ROUTES
     Route::get('/get_courses/{id?}', [CourseController::class, 'index']);
 

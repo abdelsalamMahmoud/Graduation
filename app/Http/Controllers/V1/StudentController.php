@@ -24,6 +24,16 @@ class StudentController extends Controller
          $this->middleware('auth:api');
      }
 
+     public function teachers_list()
+     {
+         try {
+             $teachers = User::where('role','2')->with('teacherinfo')->paginate(10);
+             return $this->apiResponse($teachers,'these are our teachers',200);
+         } catch (\Exception $exception) {
+             return $this->apiResponse(null,'please try again',404);
+         }
+     }
+
         public function get_notifications()
         {
             try {
@@ -35,35 +45,14 @@ class StudentController extends Controller
             }
         }
 
-        public function index()
-        {
-            try {
-                $teachers = TeacherProfile::paginate(10);
-
-                if ($teachers->isEmpty()) {
-                    return response()->json([
-                        'message' => 'No teachers found',
-                    ], 404);
-                }
-                $teacherresource = TeacherResource::collection($teachers);
-                return $this->apiResponse($teacherresource, 'ok', 200);
-
-            } catch (Exception $e) {
-                return response()->json([
-                    'message' => 'An error while fetching teachers',
-                    'errors' => $e->getMessage(),
-                ], 500);
-            }
-        }
-
         public function latestCourses(Request $request)
         {
             try {
                 $student = $request->user();
 
-                $teacher = $student->teacher;
+                $teacher = $student->subscribedTeachers()->first();
 
-                $latestCourses = Course::where('teacher_id', $teacher->user_id)->latest()->take(2)->get();
+                $latestCourses = Course::where('teacher_id', $teacher->id)->where('status','published')->with('teacher')->latest()->take(2)->get();
 
                 return response()->json([
                     'message' => 'Latest 2 courses retrieved successfully',

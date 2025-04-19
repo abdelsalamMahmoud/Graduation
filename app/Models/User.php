@@ -34,9 +34,23 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
-    public function teacher(): HasOne
+    public function teacherinfo(): HasOne
     {
         return $this->hasOne(TeacherProfile::class,'user_id','id');
+    }
+
+    // For a student: get the teacher(s) they subscribed to
+    public function subscribedTeachers()
+    {
+        return $this->belongsToMany(User::class, 'schedules', 'student_id', 'teacher_id')
+            ->wherePivot('status', 'approved');
+    }
+
+// For a teacher: get the students subscribed to them
+    public function subscribedStudents()
+    {
+        return $this->belongsToMany(User::class, 'schedules', 'teacher_id', 'student_id')
+            ->wherePivot('status', 'approved');
     }
 
     public function plans():HasMany
