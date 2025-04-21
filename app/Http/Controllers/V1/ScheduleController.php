@@ -116,5 +116,25 @@ class ScheduleController extends Controller
         }
     }
 
+    public function cancel_schedule_request($id)
+    {
+        try {
+            $schedule = Schedule::find($id);
+            if (!$schedule)
+            {
+                return $this->apiResponse(null,'schedule not found',404);
+            }
+            if($schedule->student_id != auth('api')->user()->id || $schedule->status == 'approved')
+            {
+                return $this->apiResponse(null,'you can not cancel this schedule',200);
+            }
+            $schedule->delete();
+            return $this->apiResponse(null,'schedule canceled successfully',201);
+
+        } catch (\Exception $e) {
+            return $this->apiResponse(null,'Please Try Again',400);
+        }
+    }
+
 
 }

@@ -132,6 +132,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     //schedule routes
     Route::post('/request_schedule', [ScheduleController::class, 'store']);
     Route::get('/schedules_requests_list', [ScheduleController::class, 'schedules_requests_list']);
+    Route::delete('/cancel_schedule_request/{id}', [ScheduleController::class, 'cancel_schedule_request']);
 
     //rate routes
     Route::post('/store/rate', [RateController::class, 'StoreRate']);
