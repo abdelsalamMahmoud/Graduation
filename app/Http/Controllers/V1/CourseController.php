@@ -6,21 +6,37 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreCourseRequest;
 use App\Http\Requests\V1\UpdateCourseRequest;
 use App\Models\Course;
+use App\Models\Schedule;
 
 class CourseController extends Controller
 {
     use ApiResopnseTrait;
 
-    public function index(?string $id = null)
+    public function index()
     {
         try {
             $user = auth('api')->user();
-            $teacher_id = $user->role == 2 ? $user->id : ($id ?? null);
-            if (!$teacher_id) {
-                return $this->apiResponse(null, 'Invalid request', 400);
+
+            if ($user->role == 2) {
+                $teacherIds = [$user->id];
+            } elseif ($user->role == 0) {
+
+                $teacherIds = Schedule::where('student_id', $user->id)
+                    ->where('status','approved')
+                    ->pluck('teacher_id')
+                    ->unique()
+                    ->toArray();
+
+                if (empty($teacherIds)) {
+                    return $this->apiResponse(null, 'No assigned teachers found', 400);
+                }
+            } else {
+                $teacherIds = [1];
             }
-            $courses = Course::where('teacher_id', $teacher_id)->paginate(10);
+
+            $courses = Course::whereIn('teacher_id', $teacherIds)->paginate(10);
             return $this->apiResponse($courses, 'These are your courses', 200);
+
         } catch (\Exception $exception) {
             return $this->apiResponse(null, 'Please try again', 500);
         }
@@ -29,16 +45,21 @@ class CourseController extends Controller
     public function store(StoreCourseRequest $request)
     {
         try {
-            $course = Course::create(array_merge(
-                $request->except(['_token']),
-                [
-                    'teacher_id'=>auth('api')->user()->id,
-                ]
-            ));
-            return $this->apiResponse($course,'Course Created successfully',200);
+            $data = $request->except(['_token']);
+            $data['teacher_id'] = auth('api')->user()->id;
+
+            if ($request->hasFile('cover_image')) {
+                $image = $request->file('cover_image');
+                $imagePath = $image->store('courses', 'public'); // stores in storage/app/public/courses
+                $data['cover_image'] = $imagePath;
+            }
+
+            $course = Course::create($data);
+
+            return $this->apiResponse($course, 'Course Created successfully', 200);
 
         } catch (\Exception $e) {
-            return $this->apiResponse(null,'Please Try Again',400);
+            return $this->apiResponse(null, 'Please Try Again', 400);
         }
     }
 

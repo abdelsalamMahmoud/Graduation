@@ -16,6 +16,7 @@ class StoreCourseRequest extends FormRequest
         return [
             'title' => 'required',
             'description' => 'nullable|string',
+            'cover_image' => 'nullable|image',
         ];
     }
 }

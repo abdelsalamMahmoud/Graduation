@@ -70,8 +70,8 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::get('/accepted_schedules', [ScheduleController::class, 'get_accepted_schedules']);
 
     //COURSES MANAGEMENT
+    Route::get('/get_courses', [CourseController::class, 'index']);
     Route::get('/get_course/{id}', [CourseController::class, 'show']);
-    Route::get('/get_courses/{id?}', [CourseController::class, 'index']);
     Route::post('/create_course', [CourseController::class, 'store']);
     Route::put('/update_course/{id}', [CourseController::class, 'update']);
     Route::put('/publish_course/{id}', [CourseController::class, 'publish_course']);
@@ -152,7 +152,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     Route::get('/teachers_list', [StudentController::class, 'teachers_list']);
 
     //COURSES ROUTES
-    Route::get('/get_courses/{id?}', [CourseController::class, 'index']);
+    Route::get('/get_courses', [CourseController::class, 'index']);
 
     //COURSES AND COURSE CONTENT
     Route::get('/get_video/{id}', [VideoController::class, 'show'])->middleware('check.subscription');
