@@ -67,9 +67,19 @@ class CourseController extends Controller
     {
         try {
             $course = Course::find($id);
-            return $this->apiResponse($course,'this is the course',200);
+            if (!$course) {
+                return $this->apiResponse(null, 'Course not found', 404);
+            }
+
+            // Prepend /storage/ to the cover_image path if it exists
+            $courseData = $course->toArray();
+            if (isset($courseData['cover_image']) && $courseData['cover_image']) {
+                $courseData['cover_image'] = '/storage/' . $courseData['cover_image'];
+            }
+
+            return $this->apiResponse($courseData, 'this is the course', 200);
         } catch (\Exception $exception) {
-            return $this->apiResponse(null,'please try again',404);
+            return $this->apiResponse(null, 'please try again', 404);
         }
     }
 
