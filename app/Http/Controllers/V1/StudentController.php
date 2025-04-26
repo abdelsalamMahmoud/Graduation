@@ -52,7 +52,7 @@ class StudentController extends Controller
 
                 $teacher = $student->subscribedTeachers()->first();
 
-                $latestCourses = Course::where('teacher_id', $teacher->id)->where('status','published')->with('teacher')->latest()->take(2)->get();
+                $latestCourses = Course::where('teacher_id', $teacher->id)->where('status','published')->with('teacher.teacherinfo')->latest()->take(2)->get();
 
                 return response()->json([
                     'message' => 'Latest 2 courses retrieved successfully',

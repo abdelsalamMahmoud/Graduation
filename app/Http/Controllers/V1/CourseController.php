@@ -34,7 +34,7 @@ class CourseController extends Controller
                 $teacherIds = [1];
             }
 
-            $courses = Course::whereIn('teacher_id', $teacherIds)->paginate(10);
+            $courses = Course::whereIn('teacher_id', $teacherIds)->with('teacher.teacherinfo')->paginate(10);
             return $this->apiResponse($courses, 'These are your courses', 200);
 
         } catch (\Exception $exception) {
