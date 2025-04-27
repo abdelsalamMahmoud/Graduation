@@ -66,12 +66,11 @@ class CourseController extends Controller
     public function show($id)
     {
         try {
-            $course = Course::find($id);
+            $course = Course::with(['videos','teacher.teacherinfo'])->find($id);
             if (!$course) {
                 return $this->apiResponse(null, 'Course not found', 404);
             }
 
-            // Prepend /storage/ to the cover_image path if it exists
             $courseData = $course->toArray();
             if (isset($courseData['cover_image']) && $courseData['cover_image']) {
                 $courseData['cover_image'] = '/storage/' . $courseData['cover_image'];

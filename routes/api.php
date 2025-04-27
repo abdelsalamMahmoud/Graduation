@@ -153,6 +153,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
 
     //COURSES ROUTES
     Route::get('/get_courses', [CourseController::class, 'index']);
+    Route::get('/show_course/{id}', [CourseController::class, 'show']);
 
     //COURSES AND COURSE CONTENT
     Route::get('/get_video/{id}', [VideoController::class, 'show'])->middleware('check.subscription');
