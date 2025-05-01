@@ -60,8 +60,22 @@ class VideoController extends Controller
     public function show($id)
     {
         try {
-            $video = Video::find($id);
-            return $this->apiResponse($video,'this is the video',200);
+            $video = Video::with('course.teacher.teacherinfo')->find($id);
+
+            if (!$video) {
+                return $this->apiResponse(null, 'Video not found', 404);
+            }
+
+            // Get other videos in the same course (excluding the current video)
+            $relatedVideos = Video::where('course_id', $video->course_id)
+                ->where('id', '!=', $video->id)
+                ->get();
+
+            $data = [
+                'video' => $video,
+                'related_videos' => $relatedVideos,
+            ];
+            return $this->apiResponse($data,'this is the video',200);
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
         }
