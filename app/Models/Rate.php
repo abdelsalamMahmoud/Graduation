@@ -26,4 +26,14 @@ class Rate extends Model
     {
         return $this->BelongsTo(TeacherProfile::class, 'teacher_id', 'user_id');
     }
+
+    public function students()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
 }

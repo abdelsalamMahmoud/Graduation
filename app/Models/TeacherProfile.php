@@ -13,7 +13,7 @@ class TeacherProfile extends Model
     protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'int';
-
+   
     protected $fillable =[
         'fname',
         'lname',

@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use App\Models\Plan;
 use App\Models\TeacherProfile;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TeacherResource;
@@ -54,19 +55,12 @@ class StudentController extends Controller
 
                 $latestCourses = Course::where('teacher_id', $teacher->id)->where('status','published')->with('teacher.teacherinfo')->latest()->take(2)->get();
 
-                return response()->json([
-                    'message' => 'Latest 2 courses retrieved successfully',
-                    'data' => $latestCourses
-                ], 200);
+                return $this->apiResponse($latestCourses, 'Latest 2 courses retrieved successfully', 200 ,);
 
             } catch (\Exception $e) {
-                return response()->json([
-                    'message' => 'Error fetching courses',
-                    'error' => $e->getMessage(),
-                ], 500);
+                return $this->apiResponse(null, 'Error fetching courses', 500);
             }
         }
-
 
 
         public function latestNotifications(Request $request)
@@ -75,16 +69,10 @@ class StudentController extends Controller
                 $student = $request->user();
                 $notifications = $student->notifications()->latest()->take(3)->get();
 
-                return response()->json([
-                    'message' => 'Latest 3 notifications retrieved successfully',
-                    'data' => $notifications
-                ], 200);
+                return $this->apiResponse($notifications, 'Latest 3 notifications retrieved successfully', 200);
 
             } catch (Exception $e) {
-                return response()->json([
-                    'message' => 'An error occurred while fetching notifications',
-                    'errors' => $e->getMessage(),
-                ], 500);
+                return $this->apiResponse(null, 'An error occurred while fetching notifications', 500);
             }
         }
 

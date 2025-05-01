@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     use ApiResopnseTrait;
-
+    use PaginationListTrait;
     public function index(){
         try{
             $users = User::paginate(10);
@@ -126,7 +126,7 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function make_teacher($id)
+    public function create_teacher($id)
     {
         try {
             $user = User::find($id);
@@ -137,7 +137,7 @@ class UserController extends Controller
             $teacher = TeacherProfile::create([
                 'user_id'=>$id
             ]);
-            return $this->apiResponse($user,'he is now a teacher',200);
+            return $this->apiResponse($user,'he is new a teacher',200);
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
         }
@@ -164,6 +164,73 @@ class UserController extends Controller
         } catch (\Exception $exception) {
             return $this->apiResponse(null, 'Please try again', 500);
         }
+
+    }
+
+// GET DATA OF STUDENTS
+    public function students(Request $request)
+    {
+        return $this->PaginationList(
+            $request,
+            User::class,
+            'students',
+            ['id', 'fullName', 'email', 'status', 'is_verified', 'created_at'],
+            [], 
+            mapCallback: function ($item) {
+                return [
+                    'id' => $item->id,
+                    'fullName' => $item->fullName,
+                    'email' => $item->email,
+                    'status' => $item->status,
+                    'is_verified' => $item->is_verified,
+                    'created_at' => $item->created_at,
+                ];
+            }
+        );
+    }   
+
+    // GET DATA OF TEACHERS
+    public function teachers(Request $request)
+    {
+        return $this->PaginationList(
+            $request,
+            User::class,
+            'teachers',
+            ['id', 'fullName', 'email', 'status', 'is_verified', 'created_at'],
+            [],
+            function ($item) {
+                return [
+                    'id' => $item->id,
+                    'fullName' => $item->fullName,
+                    'email' => $item->email,
+                    'status' => $item->status,
+                    'is_verified' => $item->is_verified,
+                    'created_at' => $item->created_at,
+                ];
+            }
+        );
+    }
+
+    public function applyConditions($query, $type, $request)
+    {
+        if ($type == 'students') {
+            $query->where('role', '0'); 
+        }
+
+        if ($type == 'teachers') {
+            $query->where('role', '2'); 
+        }
+        // FILTER BY STATUS
+        if ($request->has('status') && in_array($request->input('status'), ['active', 'inactive'])) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // FILTER BY ISVERIFIED
+        if ($request->has('is_verified')) {
+            $query->where('is_verified', filter_var($request->input('is_verified'), FILTER_VALIDATE_BOOLEAN));
+        }
+
+        return $query;
     }
 
 

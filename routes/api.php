@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -52,6 +51,26 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
     Route::put('/make_teacher/{id}', [UserController::class, 'make_teacher']);
     Route::put('/assign_link/{user_id}', [UserController::class, 'assign_link']);
     //END MANAGE USERS ROUTE
+
+    // RETRIEV STUDENTS AND TEACHERS
+    Route::get('/get/students',[UserController::class,'students']);
+    Route::get('/get/teachers',[UserController::class,'teachers']);
+
+    // GET COURSES AND EXAMS
+    Route::get('/get/courses', [AdminController::class,'course']);
+    Route::get('/get/exams', [AdminController::class,'exams']);
+
+    // GET FEEDBACK
+    Route::get('/get/feedbacks', [AdminController::class,'feedbacks']);
+
+    // GET INSIGHTS
+    Route::get('/get/insights', [AdminController::class,'insights']);
+
+
+
+    
+
+
 });
 //END ADMIN ROUTES
 
@@ -177,5 +196,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     });
 
 });
+
+
 
 
