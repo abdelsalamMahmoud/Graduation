@@ -52,7 +52,7 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
     Route::put('/assign_link/{user_id}', [UserController::class, 'assign_link']);
     //END MANAGE USERS ROUTE
 
-    // RETRIEV STUDENTS AND TEACHERS
+    // RETRIEVE STUDENTS AND TEACHERS
     Route::get('/get/students',[UserController::class,'students']);
     Route::get('/get/teachers',[UserController::class,'teachers']);
 
@@ -65,11 +65,6 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
 
     // GET INSIGHTS
     Route::get('/get/insights', [AdminController::class,'insights']);
-
-
-
-    
-
 
 });
 //END ADMIN ROUTES
