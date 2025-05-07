@@ -187,4 +187,38 @@ class ExamController extends Controller
             return $this->apiResponse(null,'please try again',404);
         }
     }
+
+    public function completed_exams()
+    {
+        try {
+            $student = auth('api')->user();
+
+            $exams = $student->examsTaken()
+                ->wherePivotNotNull('score')
+                ->with('teacher.teacherinfo')
+                ->withCount('questions')
+                ->get();
+            return $this->apiResponse($exams,"these are completed exams",200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+    }
+
+    public function available_exams()
+    {
+        try {
+            $student = auth('api')->user();
+            $teacherIds = $student->subscribedTeachers()->pluck('users.id');
+
+            $exams = Exam::with('teacher.teacherinfo')->withCount('questions')->whereIn('teacher_id', $teacherIds)
+                ->whereDoesntHave('students', function ($query) use ($student) {
+                    $query->where('student_exams.student_id', $student->id)
+                        ->whereNotNull('student_exams.score');
+                })
+                ->get();
+            return $this->apiResponse($exams,"these are available exams",200);
+        } catch (\Exception $exception) {
+            return $this->apiResponse(null,'please try again',404);
+        }
+    }
 }

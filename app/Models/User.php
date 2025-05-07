@@ -58,6 +58,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Plan::class);
     }
 
+    public function examsTaken()
+    {
+        return $this->belongsToMany(Exam::class, 'student_exams', 'student_id', 'exam_id')
+            ->withPivot('score');
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

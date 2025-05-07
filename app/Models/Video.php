@@ -15,6 +15,7 @@ class Video extends Model
         'title',
         'video_path',
         'order',
+        'duration',
     ];
 
     public $timestamps = true ;

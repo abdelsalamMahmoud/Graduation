@@ -25,5 +25,11 @@ class Exam extends Model
         return $this->hasMany(Question::class);
     }
 
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'student_exams', 'exam_id', 'student_id')
+            ->withPivot('score');
+    }
+
 
 }

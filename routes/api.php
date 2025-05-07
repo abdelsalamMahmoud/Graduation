@@ -172,7 +172,9 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     //COURSES AND COURSE CONTENT
     Route::get('/get_video/{id}', [VideoController::class, 'show'])->middleware('check.subscription');
 
-    //SUBMIT EXAM
+    //EXAMS ROUTES
+    Route::get('/completed_exams', [ExamController::class, 'completed_exams']);
+    Route::get('/available_exams', [ExamController::class, 'available_exams']);
     Route::post('/submit_exam', [ExamController::class, 'submit_exam']);
 
     //RESULTS ROUTES
@@ -184,11 +186,11 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     Route::get('/all_sessions', [SessionController::class, 'student_all_sessions']);
 
 
-    //STUDENT EXAM
-    Route::middleware(['ensure.student.subscription'])->group(function () {
-        Route::get('/get_exam/{id}', [ExamController::class, 'show']);
-        Route::get('/get_all_exams', [ExamController::class, 'index']);
-    });
+//    //STUDENT EXAM
+//    Route::middleware(['ensure.student.subscription'])->group(function () {
+//        Route::get('/get_exam/{id}', [ExamController::class, 'show']);
+//        Route::get('/get_all_exams', [ExamController::class, 'index']);
+//    });
 
 });
 
