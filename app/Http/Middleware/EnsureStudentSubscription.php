@@ -18,29 +18,21 @@ class EnsureStudentSubscription
     public function handle(Request $request, Closure $next): Response
     {
         $student_id = auth('api')->user()->id;
-        $exam_id = $request->route('exam_id') ?? null;
-        $teacher_id = $request->route('teacher_id');
+        $exam_id = $request->route('id');
+        if (!$exam_id) {
+            return response()->json(['message' => 'Exam ID is required.'], 400);
+        }
 
+        $exam = Exam::find($exam_id);
+        if (!$exam) {
+            return response()->json(['message' => 'Exam not found.'], 404);
+        }
+
+        $teacher_id = $exam->teacher_id;
         if(!$teacher_id){
             return response()->json([
                 'message' => 'Teacher ID is required'
             ], 400);
-        }
-
-        if ($exam_id) {
-            $exam = Exam::find($exam_id);
-
-            if (!$exam) {
-                return response()->json([
-                    'message' => 'Exam not found'
-                ], 404);
-            }
-
-            if ($exam->teacher_id != $teacher_id) {
-                return response()->json([
-                    'message' => 'This exam does not belong to the specified teacher'
-                ], 403);
-            }
         }
 
         $subscription = Schedule::where('student_id', $student_id)
@@ -50,7 +42,7 @@ class EnsureStudentSubscription
 
         if(!$subscription){
             return response()->json([
-                'message' => 'You are not subscriped to this teacher'
+                'message' => 'You are not subscribed to this teacher'
             ], 403);
         }
 

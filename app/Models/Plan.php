@@ -12,6 +12,7 @@ class Plan extends Model
 
     protected $fillable =[
         'amount',
+        'title',
         'number_of_days',
         'task_per_day',
         'progress',

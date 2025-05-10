@@ -140,7 +140,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     //Plans routes
     Route::get('/get_plans', [PlanController::class, 'index']);
     Route::post('/request_plan', [PlanController::class, 'store']);
-    Route::post('/update-progress/{studentId}', [PlanController::class, 'updateProgress']);
+    Route::put('/update_progress/{id}', [PlanController::class, 'updateProgress']);
     Route::get('/{id}/view/student/Progress', [PlanController::class, 'ViewStudentProgress']);
 
     //schedule routes
@@ -175,6 +175,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     //EXAMS ROUTES
     Route::get('/completed_exams', [ExamController::class, 'completed_exams']);
     Route::get('/available_exams', [ExamController::class, 'available_exams']);
+    Route::get('/get_exam/{id}', [ExamController::class, 'show'])->middleware('ensure.student.subscription');
     Route::post('/submit_exam', [ExamController::class, 'submit_exam']);
 
     //RESULTS ROUTES

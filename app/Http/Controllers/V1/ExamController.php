@@ -46,7 +46,7 @@ class ExamController extends Controller
     public function show($id)
     {
         try {
-            $exam = Exam::with('questions')->find($id);
+            $exam = Exam::with(['questions.choices','teacher.teacherinfo'])->find($id);
             return $this->apiResponse($exam,'this is the exam',200);
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);

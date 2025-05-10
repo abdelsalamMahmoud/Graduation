@@ -40,7 +40,7 @@ class PlanController extends Controller
         }
     }
 
-    public function updateProgress(Request $request, $studentId)
+    public function updateProgress(Request $request, $id)
     {
         $user = auth('api')->user();
         if (!$user) {
@@ -53,7 +53,7 @@ class PlanController extends Controller
             'progress' => 'required|numeric|min:0|max:100',
         ]);
 
-        $progress = Plan::where('user_id', $studentId)->first();
+        $progress = Plan::find($id);
 
         if (!$progress) {
             return response()->json([
@@ -73,7 +73,6 @@ class PlanController extends Controller
 
         return response()->json([
             'message' => 'Progress updated successfully',
-            'student_id' => $studentId,
             'percentage_of_progress' => $progress->progress
         ], 200);
     }

@@ -15,6 +15,7 @@ class StorePlanRequest extends FormRequest
     {
         return [
             'amount'=>'required',
+            'title'=>'required',
             'number_of_days'=>'required',
             'progress'=>'nullable',
         ];
