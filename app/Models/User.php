@@ -64,6 +64,11 @@ class User extends Authenticatable implements JWTSubject
             ->withPivot('score');
     }
 
+    public function rates():HasMany
+    {
+        return $this->hasMany(Rate::class);
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

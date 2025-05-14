@@ -14,7 +14,12 @@ class RateController extends Controller
     public function StoreRate(StoreRateRequest $request){
         try{
 
-            $rate = Rate::create($request->all());
+            $rate = Rate::create(array_merge(
+                $request->except(['_token']),
+                [
+                    'user_id'=>auth('api')->user()->id,
+                ]
+            ));
             return response()->json([
                 'message'=>'Rating submitted successfully',
                 'data'=>$rate,

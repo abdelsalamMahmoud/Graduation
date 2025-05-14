@@ -24,17 +24,6 @@ class StudentController extends Controller
      {
          $this->middleware('auth:api');
      }
-
-     public function teachers_list()
-     {
-         try {
-             $teachers = User::where('role','2')->with('teacherinfo')->paginate(10);
-             return $this->apiResponse($teachers,'these are our teachers',200);
-         } catch (\Exception $exception) {
-             return $this->apiResponse(null,'please try again',404);
-         }
-     }
-
         public function get_notifications()
         {
             try {
@@ -75,6 +64,5 @@ class StudentController extends Controller
                 return $this->apiResponse(null, 'An error occurred while fetching notifications', 500);
             }
         }
-
 
 }

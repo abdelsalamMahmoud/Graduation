@@ -1,15 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\QuranController;
-use App\Http\Controllers\RecitationController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\CourseController;
 use App\Http\Controllers\V1\ExamController;
 use App\Http\Controllers\V1\OptionController;
 use App\Http\Controllers\V1\PlanController;
 use App\Http\Controllers\V1\QuestionController;
+use App\Http\Controllers\V1\QuranController;
 use App\Http\Controllers\V1\RateController;
+use App\Http\Controllers\V1\RecitationController;
 use App\Http\Controllers\V1\ScheduleController;
 use App\Http\Controllers\V1\SessionController;
 use App\Http\Controllers\V1\StudentController;
@@ -165,7 +165,8 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     Route::get('/latest_courses', [StudentController::class, 'latestCourses']);
 
     // TEACHERS LIST
-    Route::get('/teachers_list', [StudentController::class, 'teachers_list']);
+    Route::get('/teachers_list', [TeacherProfileController::class, 'teachers_list']);
+    Route::get('/teacher_profile/{id}', [TeacherProfileController::class, 'teacher_profile']);
 
     //COURSES ROUTES
     Route::get('/get_courses', [CourseController::class, 'index']);
@@ -194,7 +195,6 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
 //        Route::get('/get_exam/{id}', [ExamController::class, 'show']);
 //        Route::get('/get_all_exams', [ExamController::class, 'index']);
 //    });
-
 
     //QURAN RECITATION ROUTES
     Route::get('/surahs', [QuranController::class, 'getSurahs']);
