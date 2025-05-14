@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QuranController;
+use App\Http\Controllers\RecitationController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\CourseController;
 use App\Http\Controllers\V1\ExamController;
@@ -193,7 +195,16 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
 //        Route::get('/get_all_exams', [ExamController::class, 'index']);
 //    });
 
+
+    //QURAN RECITATION ROUTES
+    Route::get('/surahs', [QuranController::class, 'getSurahs']);
+    Route::get('/surahs/{id}/verses', [QuranController::class, 'getVerses']);
+    Route::post('/recitation/check', [RecitationController::class, 'checkVerse']);
+    Route::post('/recitation/next', [RecitationController::class, 'getNextVerse']);
+
 });
+
+
 
 
 
