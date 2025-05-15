@@ -56,7 +56,7 @@ class TeacherProfileController extends Controller
     public function teachers_list()
     {
         try {
-            $teachers = User::where('role','2')->with('teacherinfo')->paginate(10);
+            $teachers = User::where('role','2')->with(['teacherinfo','feedbacks.students'])->paginate(10);
             return $this->apiResponse($teachers,'these are our teachers',200);
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
