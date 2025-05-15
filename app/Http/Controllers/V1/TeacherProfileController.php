@@ -66,7 +66,7 @@ class TeacherProfileController extends Controller
     public function teacher_profile($id)
     {
         try {
-            $teacher = User::with(['teacherinfo','rates'])->findOrFail($id);
+            $teacher = User::with(['teacherinfo','feedbacks'])->findOrFail($id);
             return $this->apiResponse($teacher,'this is teacher profile',200);
         } catch (\Exception $exception) {
             return $this->apiResponse(null,'please try again',404);
