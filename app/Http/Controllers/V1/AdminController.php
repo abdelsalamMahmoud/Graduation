@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\V1;
+use App\Notifications\AdminMessage;
 use Exception;
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -13,6 +14,7 @@ use App\Models\Exam;
 use App\Models\Rate;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -22,7 +24,7 @@ class AdminController extends Controller
 // GET COURSES
     public function course(Request $request)
     {
-        
+
         return $this->PaginationList(
             $request,
             Course::class,
@@ -33,7 +35,7 @@ class AdminController extends Controller
                     $query->select(['id', 'fullName']);
                 },
             ],
-            
+
             function ($item) {
                 return [
                     'title'=>$item->title,
@@ -93,7 +95,7 @@ class AdminController extends Controller
                 ];
             }
         );
-  
+
     }
 
 
@@ -105,7 +107,7 @@ class AdminController extends Controller
         // if ($request->has('status') && in_array($request->input('status'), ['draft', 'published'])) {
         //     $query->where('status', $request->input('status'));
         // }
-       
+
         if ($type == 'exams') {
             return $query->has('teacher');
         }
@@ -116,10 +118,10 @@ class AdminController extends Controller
             if ($request->has('student_id')) {
                 $query->where('user_id', $request->input('student_id'));
             }
-            
+
         return $query;
     }
-    
+
     }
 
 
@@ -140,11 +142,36 @@ class AdminController extends Controller
                             ],
                             'message'=> 'Insights retrieved successfully',
                         ], 200);
-                      
+
         }
         catch (\Exception $exception) {
             return $this->apiResponse(null,'Error retrieving insights',500);
-    }
+        }
     }
 
+
+
+    public function send_notification(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'user_id' => ['required', 'exists:users,id'],
+                'message' => ['required', 'string'],
+            ]);
+
+            if ($validator->fails()) {
+                return $this->apiResponse($validator->errors(), 'Validation failed', 422);
+            }
+
+            $user = User::findOrFail($request->user_id);
+            $user->notify(new AdminMessage($request->message));
+
+            return $this->apiResponse(null, 'Message sent successfully', 200);
+
+        } catch (\Exception $e) {
+            return $this->apiResponse(null, 'Something went wrong while sending the notification.', 500);
+        }
     }
+
+
+}

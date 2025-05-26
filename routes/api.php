@@ -68,8 +68,9 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
     // GET INSIGHTS
     Route::get('/get/insights', [AdminController::class,'insights']);
 
+    Route::post('/send/notification', [AdminController::class,'send_notification']);
+
 });
-//END ADMIN ROUTES
 
 
 
