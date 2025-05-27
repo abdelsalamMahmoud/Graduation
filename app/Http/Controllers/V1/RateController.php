@@ -4,6 +4,8 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreRateRequest;
+use App\Http\Requests\V1\UpdateRateRequest;
+
 use App\Models\Rate;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -33,15 +35,20 @@ class RateController extends Controller
         }
     }
 
-    public function updateRate($id, StoreRateRequest $request)
+    public function updateRate($id, UpdateRateRequest $request)
 {
     try {
         $rate = Rate::findOrFail($id);
+        $data = $request->validated();
 
-        $rate->update([
-            'rate' => $request->rate,
-            'feedback' => $request->feedback,
-        ]);
+         if (!array_key_exists('feedback', $data)) {
+                unset($data['feedback']);
+            }
+         if (!array_key_exists('rate', $data)) {
+                unset($data['rate']);
+            }
+
+        $rate->update($data);
 
         return response()->json([
             'message' => 'Rating updated successfully',

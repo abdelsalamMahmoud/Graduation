@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -153,7 +154,7 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
 
     //rate routes
     Route::post('/store/rate', [RateController::class, 'StoreRate']);
-    Route::post('/rate/{id}', [RateController::class, 'updateRate']);
+    Route::put('/rate/{id}', [RateController::class, 'updateRate']);
     Route::delete('/delete/rate/{id}', [RateController::class, 'deleteRate']);
 
     //STUDENT NOTIFICATIONS
@@ -204,9 +205,3 @@ Route::group(['prefix'=>'v1/student','middleware' => ['auth:api']],function (){
     Route::post('/recitation/next', [RecitationController::class, 'getNextVerse']);
 
 });
-
-
-
-
-
-
