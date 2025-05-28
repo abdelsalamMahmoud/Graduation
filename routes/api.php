@@ -71,6 +71,8 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
 
     Route::post('/send/notification', [AdminController::class,'send_notification']);
 
+    Route::get('/latest-summary', [UserController::class, 'latestStudentsAndCourses']);
+
 });
 
 

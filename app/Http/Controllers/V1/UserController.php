@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\V1;
+use App\Models\Course;
 use App\Models\TeacherProfile;
 use Exception;
 use App\Http\Controllers\Controller;
@@ -175,30 +176,8 @@ class UserController extends Controller
             User::class,
             'students',
             ['id', 'fullName', 'email', 'status', 'is_verified', 'created_at'],
-            [], 
-            mapCallback: function ($item) {
-                return [
-                    'id' => $item->id,
-                    'fullName' => $item->fullName,
-                    'email' => $item->email,
-                    'status' => $item->status,
-                    'is_verified' => $item->is_verified,
-                    'created_at' => $item->created_at,
-                ];
-            }
-        );
-    }   
-
-    // GET DATA OF TEACHERS
-    public function teachers(Request $request)
-    {
-        return $this->PaginationList(
-            $request,
-            User::class,
-            'teachers',
-            ['id', 'fullName', 'email', 'status', 'is_verified', 'created_at'],
             [],
-            function ($item) {
+            mapCallback: function ($item) {
                 return [
                     'id' => $item->id,
                     'fullName' => $item->fullName,
@@ -211,14 +190,31 @@ class UserController extends Controller
         );
     }
 
+    // GET DATA OF TEACHERS
+    public function teachers()
+    {
+        try {
+            $teachers = User::where('role', 2)
+                ->with('teacherinfo')
+                ->withCount(['courses', 'subscribedStudents'])
+                ->withAvg('feedbacks', 'rate')
+                ->get();
+
+            return $this->apiResponse($teachers, 'This is a list of teachers', 200);
+
+        } catch (\Exception $e) {
+            return $this->apiResponse(null, 'Something went wrong: ' . $e->getMessage(), 500);
+        }
+    }
+
     public function applyConditions($query, $type, $request)
     {
         if ($type == 'students') {
-            $query->where('role', '0'); 
+            $query->where('role', '0');
         }
 
         if ($type == 'teachers') {
-            $query->where('role', '2'); 
+            $query->where('role', '2');
         }
         // FILTER BY STATUS
         if ($request->has('status') && in_array($request->input('status'), ['active', 'inactive'])) {
@@ -231,6 +227,28 @@ class UserController extends Controller
         }
 
         return $query;
+    }
+
+    public function latestStudentsAndCourses()
+    {
+        try {
+            $latestStudents = User::where('role', 0)
+                ->latest()
+                ->take(2)
+                ->get();
+
+            $latestCourses = Course::latest()
+                ->take(2)
+                ->get();
+
+            return $this->apiResponse([
+                'latest_students' => $latestStudents,
+                'latest_courses' => $latestCourses,
+            ], 'Latest 2 registered students and courses', 200);
+
+        } catch (\Exception $e) {
+            return $this->apiResponse(null, 'Something went wrong: ' . $e->getMessage(), 500);
+        }
     }
 
 
