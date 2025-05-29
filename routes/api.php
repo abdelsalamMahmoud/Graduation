@@ -48,8 +48,8 @@ Route::group(['prefix'=>'v1/admin','middleware' => ['is_admin']],function (){
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/user/{id}', [UserController::class, 'show']);
     Route::post('/create_user', [UserController::class, 'store']);
-    Route::post('/update/{id}', [UserController::class, 'update']);
-    Route::post('/delete/{id}', [UserController::class, 'destroy']);
+    Route::patch('/update/{id}', [UserController::class, 'update']);
+    Route::delete('/delete/{id}', [UserController::class, 'destroy']);
     Route::post('delete/multiple/user', [UserController::class, 'deleteMultipleUsers']);
     Route::put('/make_teacher/{id}', [UserController::class, 'make_teacher']);
     Route::put('/assign_link/{user_id}', [UserController::class, 'assign_link']);

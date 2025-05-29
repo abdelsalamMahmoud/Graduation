@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\V1;
+use App\Http\Requests\V1\UpdateUserRequest;
 use App\Models\Course;
 use App\Models\TeacherProfile;
 use Exception;
@@ -73,11 +74,11 @@ class UserController extends Controller
         }
     }
 
-    public function update(StoreUserRequest $request, $id){
+    public function update(UpdateUserRequest $request, $id){
         try{
             $user = User::findOrFail($id);
             $user->update($request->all());
-            return $this->apiresponse($user, 'this user is updated', 200);
+            return $this->apiresponse($user, 'user updated successfully', 200);
         }
         catch(Exception $e){
             return response()->json([
@@ -92,7 +93,7 @@ class UserController extends Controller
         try{
             $user = User::find($id);
             $user->delete();
-            return $this->apiresponse(null, 'this user is deleted', 200);
+            return $this->apiresponse(null, 'user deleted successfully', 200);
         }
         catch (ModelNotFoundException $e) {
             return $this->apiResponse(null, 'User not found', 404);
