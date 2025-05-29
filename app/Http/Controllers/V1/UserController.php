@@ -194,7 +194,7 @@ class UserController extends Controller
     public function teachers()
     {
         try {
-            $teachers = User::where('role', 2)
+            $teachers = User::where('role', "2")
                 ->with('teacherinfo')
                 ->withCount(['courses', 'subscribedStudents'])
                 ->withAvg('feedbacks', 'rate')
@@ -232,7 +232,7 @@ class UserController extends Controller
     public function latestStudentsAndCourses()
     {
         try {
-            $latestStudents = User::where('role', 0)
+            $latestStudents = User::where('role', '0')
                 ->latest()
                 ->take(2)
                 ->get();
