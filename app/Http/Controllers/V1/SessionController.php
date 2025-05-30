@@ -59,10 +59,17 @@ class SessionController extends Controller
     public function teacher_today_sessions()
     {
         try {
-            $todaySessions = Session::where('teacher_id',auth('api')->user()->id)->where('date', Carbon::today()->format('Y-m-d'))->with('student:id,fullName')->paginate(10);
-            return $this->apiResponse($todaySessions,"these are today's sessions",200);
+            $todaySessions = Session::where('teacher_id', auth('api')->user()->id)
+                ->where('date', Carbon::today()->format('Y-m-d'))
+                ->with([
+                    'student:id,fullName',
+                    'teacher.teacherinfo:user_id,link'
+                ])
+                ->paginate(10);
+
+            return $this->apiResponse($todaySessions, "these are today's sessions", 200);
         } catch (\Exception $exception) {
-            return $this->apiResponse(null,'please try again',404);
+            return $this->apiResponse(null, 'please try again', 404);
         }
     }
 
