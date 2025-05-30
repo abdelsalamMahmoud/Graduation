@@ -64,15 +64,7 @@ class AdminController extends Controller
         $feedbacks = Rate::with([
             'students:id,fullname',
             'teacher:id,fullname'
-        ])->get()->map(function ($feedback) {
-            return [
-                'id' => $feedback->id,
-                'rating' => $feedback->rating,
-                'feedback' => $feedback->feedback,
-                'student_fullname' => $feedback->students?->fullname,
-                'teacher_fullname' => $feedback->teacher?->fullname,
-            ];
-        });
+        ])->get();
 
         return $this->apiResponse($feedbacks, 'These are all feedbacks', 200);
     }
