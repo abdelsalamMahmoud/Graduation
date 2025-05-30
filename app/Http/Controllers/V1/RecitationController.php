@@ -37,7 +37,7 @@ class RecitationController extends Controller
 
             $modelTranscription = $response->json()['transcription'] ?? '';
 
-            // Compare exact words with tashkeel
+            // Compare exact words
             $actualWords = explode(' ', trim($verse->text));
             $predictedWords = explode(' ', trim($modelTranscription));
 

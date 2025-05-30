@@ -61,30 +61,20 @@ class AdminController extends Controller
     // GET FEEDBACK
     public function feedbacks(Request $request)
     {
-        return $this->PaginationList(
-            $request,
-            Rate::class,
-            'feedbacks',
-            ['id', 'user_id', 'teacher_id', 'feedback', 'created_at'],
-            [
-                'user'=>function($query) {
-                    $query->select('id', 'fullName')->where('role', 1);
-                },
-                'teacher'=>function($query) {
-                    $query->select('id', 'fullName')->where('role', '2');
-                },
-            ],
-            function ($item) {
-                return [
-                    'id' => $item->id,
-                    'student_nam'=>$item->user ? $item->user->fullName : 'unknoun',
-                    'teacher_name'=>$item->teacher ? $item->teacher->fullName : 'Unknown',
-                    'feedback'=>$item->feedback ?? 'Not Found feedback',
-                    'created_at'=>$item->created_at ? $item->created_at : null,
-                ];
-            }
-        );
+        $feedbacks = Rate::with([
+            'students:id,fullname',
+            'teacher:id,fullname'
+        ])->get()->map(function ($feedback) {
+            return [
+                'id' => $feedback->id,
+                'rating' => $feedback->rating,
+                'feedback' => $feedback->feedback,
+                'student_fullname' => $feedback->students?->fullname,
+                'teacher_fullname' => $feedback->teacher?->fullname,
+            ];
+        });
 
+        return $this->apiResponse($feedbacks, 'These are all feedbacks', 200);
     }
 
 
