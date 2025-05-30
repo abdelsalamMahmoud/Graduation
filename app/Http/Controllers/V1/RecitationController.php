@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckVerseRequest;
 use App\Models\Verse;
+use Illuminate\Support\Facades\Http;
 
 class RecitationController extends Controller
 {
@@ -13,21 +14,32 @@ class RecitationController extends Controller
     public function checkVerse(CheckVerseRequest $request)
     {
         try {
-            // Save audio temporarily
-//            $audioPath = $request->file('audio')->store('recitations');
+            // Get uploaded audio file and store it temporarily
+            $file = $request->file('audio');
+            $storedPath = $file->store('recitations');
+            $fullPath = storage_path("app/{$storedPath}");
 
-            // Get correct verse
+            // Get the correct verse from database
             $verse = Verse::where('surah_id', $request->surah_id)
                 ->where('verse_number', $request->verse_number)
                 ->firstOrFail();
 
-            // ---- Dummy ML response ----
-            // Replace this with actual ML model integration
-            $modelTranscription = "ٱلۡحَمۡدُ لِلَّهِ رَبِّ ٱلۡعَٰلَمِينَ";
+            // Send audio to the ML model (use 'file' as field name)
+            $response = Http::attach(
+                'file',
+                file_get_contents($fullPath),
+                $file->getClientOriginalName()
+            )->post('http://localhost:5000/transcribe/');
 
-            // Compare words
-            $actualWords = explode(' ', strip_tags($verse->text));
-            $predictedWords = explode(' ', $modelTranscription);
+            if (!$response->ok()) {
+                return response()->json(['error' => 'ML API failed'], 500);
+            }
+
+            $modelTranscription = $response->json()['transcription'] ?? '';
+
+            // Compare exact words with tashkeel
+            $actualWords = explode(' ', trim($verse->text));
+            $predictedWords = explode(' ', trim($modelTranscription));
 
             $comparison = [];
             foreach ($actualWords as $i => $word) {
@@ -43,9 +55,10 @@ class RecitationController extends Controller
                 'word_match' => $comparison
             ];
 
-            return $this->apiResponse($data,'this is the result',200);
+            return $this->apiResponse($data, 'Comparison complete', 200);
+
         } catch (\Exception $exception) {
-            return $this->apiResponse(null,'please try again',404);
+            return $this->apiResponse(null, 'An error occurred: ' . $exception->getMessage(), 500);
         }
     }
 

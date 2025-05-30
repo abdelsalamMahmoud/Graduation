@@ -25,7 +25,7 @@ class CheckVerseRequest extends FormRequest
         return [
             'surah_id' => 'required|exists:surahs,id',
             'verse_number' => 'required|integer',
-//            'audio' => 'required|file|mimes:mp3,wav,m4a'
+            'audio' => 'required|file|mimes:mp3,wav'
         ];
     }
 }
