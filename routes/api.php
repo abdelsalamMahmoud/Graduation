@@ -136,6 +136,9 @@ Route::group(['prefix'=>'v1/teacher','middleware' => ['is_teacher']],function ()
     Route::put('/finish_session/{id}', [SessionController::class, 'finish_session']);
     Route::delete('/delete_session/{id}', [SessionController::class, 'delete']);
 
+    // TEACHER NOTIFICATIONS
+    Route::get('/get_notifications', [StudentController::class, 'get_notifications']);
+
 });
 //END TEACHER ROUTES
 

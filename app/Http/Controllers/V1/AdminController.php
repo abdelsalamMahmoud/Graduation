@@ -29,7 +29,7 @@ class AdminController extends Controller
             $request,
             Course::class,
             'courses',
-            ['id', 'title', 'teacher_id','status'],
+            ['id', 'title', 'teacher_id','status','created_at'],
             [
                 'teacher'=> function ($query) {
                     $query->select(['id', 'fullName']);
@@ -41,6 +41,7 @@ class AdminController extends Controller
                     'title'=>$item->title,
                     'teacher'=> $item->teacher ? $item->teacher->fullName : 'Unknoun',
                     'status'=> $item->status,
+                    'created_at'=> $item->created_at,
                 ];
             }
         );
@@ -48,25 +49,13 @@ class AdminController extends Controller
 
 
 // GET EXAMS
-    public function exams(Request $request)
+    public function exams()
     {
-        return $this->PaginationList(
-            $request,
-            Exam::class,
-            'exams',
-            ['id', 'title', 'teacher_id'],
-            [
-                'teacher' => function ($query) {
-                    $query->select(['id', 'fullName']);
-                },
-            ],
-            function ($item) {
-                return [
-                    'title' => $item->title,
-                    'teacher' => $item->teacher ? $item->teacher->fullName : 'unknown',
-                ];
-            }
-        );
+        $exams = Exam::with('teacher.teacherinfo')
+            ->withCount('questions')
+            ->get();
+        return $this->apiResponse($exams, 'these are all exams', 200);
+
     }
 
     // GET FEEDBACK
