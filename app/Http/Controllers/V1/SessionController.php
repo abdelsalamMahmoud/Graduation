@@ -50,8 +50,8 @@ class SessionController extends Controller
 
         if (!empty($sessions)) {
             Session::insert($sessions);
+            $schedule->delete();
         }
-
         return $this->apiResponse($sessions,'Sessions generated successfully',200);
     }
 

@@ -45,12 +45,12 @@ class ScheduleController extends Controller
         try {
             $schedule = Schedule::find($id);
             $student = User::find($schedule->student_id);
-            $teacher = User::find($schedule->teacher_id);
+            $teacher = User::with('teacherinfo')->find($schedule->teacher_id);
             $schedule->update([
                 'status'=>'approved',
             ]);
 
-            $student->notify(new SchedulesNotification($teacher->fullName,' Approved by teacher'));
+            $student->notify(new SchedulesNotification($teacher->teacherinfo->fname,' تم قبوله بواسطة المعلم'));
 
             return $this->apiResponse($schedule,'schedule accepted successfully',201);
 
@@ -64,11 +64,11 @@ class ScheduleController extends Controller
         try {
             $schedule = Schedule::find($id);
             $student = User::find($schedule->student_id);
-            $teacher = User::find($schedule->teacher_id);
+            $teacher = User::with('teacherinfo')->find($schedule->teacher_id);
             $schedule->update([
                 'status'=>'rejected',
             ]);
-            $student->notify(new SchedulesNotification($teacher->fullName,' Rejected by teacher'));
+            $student->notify(new SchedulesNotification($teacher->teacherinfo->fname,' تم رفضه بواسطة المعلم'));
 
             return $this->apiResponse($schedule,'schedule rejected successfully',201);
 
