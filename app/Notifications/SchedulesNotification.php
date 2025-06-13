@@ -28,7 +28,7 @@ class SchedulesNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message'=> 'طلب جدولتك مع ' . $this->teacher_name . $this->message,
+            'message'=> '  الطلب الذى ارسلته الى الشيخ  ' . $this->teacher_name . $this->message,
         ];
     }
 }

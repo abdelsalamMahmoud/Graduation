@@ -50,7 +50,7 @@ class ScheduleController extends Controller
                 'status'=>'approved',
             ]);
 
-            $student->notify(new SchedulesNotification($teacher->teacherinfo->fname,' تم قبوله بواسطة المعلم'));
+            $student->notify(new SchedulesNotification($teacher->teacherinfo->fname,' تم قبوله '));
 
             return $this->apiResponse($schedule,'schedule accepted successfully',201);
 
@@ -68,7 +68,7 @@ class ScheduleController extends Controller
             $schedule->update([
                 'status'=>'rejected',
             ]);
-            $student->notify(new SchedulesNotification($teacher->teacherinfo->fname,' تم رفضه بواسطة المعلم'));
+            $student->notify(new SchedulesNotification($teacher->teacherinfo->fname,' تم رفضه '));
 
             return $this->apiResponse($schedule,'schedule rejected successfully',201);
 
